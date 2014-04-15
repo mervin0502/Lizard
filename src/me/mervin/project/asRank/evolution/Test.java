@@ -17,10 +17,14 @@ import me.mervin.util.EdgeDeweigh;
 public class Test {
 
 	public static void main(String[] args){
-		Test t = new Test();
+/*		Test t = new Test();
 		t.t1();
-		D.m();
-	
+		D.m();*/
+		String str = "0";
+		int i = 0;
+		if(str.equals(i+"")){
+			D.m();
+		}
 	}
 	
 	public void t1(){
