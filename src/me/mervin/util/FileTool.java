@@ -50,7 +50,7 @@ import me.mervin.core.Global.NumberType;
  */
 
 public class FileTool {
-	private String filePath = null;//读文件路径
+	private String srcFile = null;//读文件路径
 	private String fileDirPath = null;
 	private String dstFile = null;//写文件路径
 	
@@ -65,29 +65,29 @@ public class FileTool {
 	public FileTool(){
 		
 	}
-	public FileTool(String filePath){
-		File file = new File(filePath);
+	public FileTool(String srcFile){
+		File file = new File(srcFile);
 		if(file.isFile()){
-			this.filePath  = filePath;
+			this.srcFile  = srcFile;
 		}else{
-			this.fileDirPath = filePath;
+			this.fileDirPath = srcFile;
 		}
 		
 	}	
-	public FileTool(String filePath, String dstFile){
-		File file = new File(filePath);
+	public FileTool(String srcFile, String dstFile){
+		File file = new File(srcFile);
 		if(file.isFile()){
-			this.filePath  = filePath;
+			this.srcFile  = srcFile;
 		}else{
-			this.fileDirPath = filePath;
+			this.fileDirPath = srcFile;
 		}
 		
 	}
 	
 	private void initFileRead(){
-		if(this.filePath != null){
+		if(this.srcFile != null){
 			try {
-				this.reader =  new BufferedReader(new FileReader(this.filePath));
+				this.reader =  new BufferedReader(new FileReader(this.srcFile));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -95,7 +95,7 @@ public class FileTool {
 		}
 	}
 	private void initFileWrite(){
-		if(this.filePath != null){
+		if(this.srcFile != null){
 			try {
 				this.writer = new BufferedWriter(new FileWriter(this.dstFile));
 			} catch (IOException e) {
@@ -119,7 +119,7 @@ public class FileTool {
 		String line = new String();
 		int num = 0;
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(this.filePath));
+			BufferedReader reader = new BufferedReader(new FileReader(this.srcFile));
 			try {
 				while((line = reader.readLine()) != null){
 					if(line.contains(str)){
@@ -149,7 +149,7 @@ public class FileTool {
 		BufferedReader reader;
 		String line = null;
 		try {
-			reader = new BufferedReader(new FileReader(this.filePath));
+			reader = new BufferedReader(new FileReader(this.srcFile));
 			while((line = reader.readLine()) != null){
 				if(line.charAt(0) != '#' && line.charAt(0) != '*' && line.charAt(0) != '%'){
 					++lineNum;
@@ -445,25 +445,25 @@ public class FileTool {
 	/**
 	 *  
 	 *  对文件数据到集合中
-	 * @param filePath 文件夹或者文件路径
+	 * @param srcFile 文件夹或者文件路径
 	 * @return HashSet<Number>
 	 */
-	public Set<Number> read2Set(String filePath){
-		return this.read2Set(filePath, NumberType.INTEGER);
+	public Set<Number> read2Set(String srcFile){
+		return this.read2Set(srcFile, NumberType.INTEGER);
 	}
 	/**
 	 *  
 	 *  对文件数据到集合中
-	 * @param filePath
+	 * @param srcFile
 	 * @param numType
 	 * @return HashSet<Number>
 	 */
-	public Set<Number> read2Set(String filePath,NumberType numType){
-		this.filePath = filePath;
+	public Set<Number> read2Set(String srcFile,NumberType numType){
+		this.srcFile = srcFile;
 		HashSet<Number> set = new HashSet<Number>();
 		//this.initFileRead();
 		try {
-			BufferedReader reader =  new BufferedReader(new FileReader(this.filePath));
+			BufferedReader reader =  new BufferedReader(new FileReader(this.srcFile));
 			String line = null;
 			String[] lineArr = null;
 			while ((line = reader.readLine()) != null) {
@@ -487,18 +487,18 @@ public class FileTool {
 	/**
 	 *  
 	 *  对文件数据到集合中
-	 * @param filePath
+	 * @param srcFile
 	 * @param numType
-	 * @param col 需要提取的列
+	 * @param col 需要提取的列,从1开始计数
 	 * @return Set<Number>
 	 */
-	public Set<Number> read2Set(String filePath,NumberType numType, int[] col){
-//		public HashSet<Number> read2Set(String filePath,NumberType numType, List<Integer> cols){
-		this.filePath = filePath;
+	public Set<Number> read2Set(String srcFile,NumberType numType, int[] col){
+//		public HashSet<Number> read2Set(String srcFile,NumberType numType, List<Integer> cols){
+		this.srcFile = srcFile;
 		HashSet<Number> set = new HashSet<Number>();
 
 		try {
-			BufferedReader reader =  new BufferedReader(new FileReader(this.filePath));
+			BufferedReader reader =  new BufferedReader(new FileReader(this.srcFile));
 			String line = null;
 			String[] lineArr = null;
 			while ((line = reader.readLine()) != null) {
@@ -524,18 +524,18 @@ public class FileTool {
 	 * 
 	 *  Function: 读取文件的内容到List类型中。
 	 * 
-	 *  @param filePath
+	 *  @param srcFile
 	 *  @param numType
 	 *  @param col
 	 *  @return  List<Number>
 	 */
 	@SuppressWarnings("resource")
-	public List<Number> read2List(String filePath, NumberType numType, int[] col){
+	public List<Number> read2List(String srcFile, NumberType numType, int[] col){
 		ArrayList<Number> list = new ArrayList<Number>();
 		
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(filePath));
+			reader = new BufferedReader(new FileReader(srcFile));
 			String line = null;
 			String[] lineArr = null;
 			while ((line = reader.readLine()) != null) {
@@ -559,12 +559,12 @@ public class FileTool {
 	/**
 	 *  
 	 *  读取文件的内容到map中
-	 * @param filePath 文件夹或者文件路径
+	 * @param srcFile 文件夹或者文件路径
 	 * @return HashMap<Number, Number>
 	 */
-	public Map<Number, Number> read2Map(String filePath){
+	public Map<Number, Number> read2Map(String srcFile){
 		 HashMap<Number, Number> map = new  HashMap<Number, Number>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(fileArr[i]));
@@ -590,13 +590,13 @@ public class FileTool {
 	/**
 	 *  
 	 *  读取文件的内容到map中
-	 * @param filePath
+	 * @param srcFile
 	 * @param numberType
 	 * @return HashMap<Number, Number>
 	 */
-	public Map<Number, Number> read2Map(String filePath, NumberType numberType){
+	public Map<Number, Number> read2Map(String srcFile, NumberType numberType){
 		 HashMap<Number, Number> map = new  HashMap<Number, Number>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(fileArr[i]));
@@ -622,14 +622,14 @@ public class FileTool {
 	/**
 	 *  
 	 *  读取文件的内容到map中
-	 * @param filePath
+	 * @param srcFile
 	 * @param leftNumberType
 	 * @param rightNumberType
 	 * @return HashMap<Number, Number>
 	 */
-	public Map<Number, Number> read2Map(String filePath, NumberType leftNumberType, NumberType rightNumberType){
+	public Map<Number, Number> read2Map(String srcFile, NumberType leftNumberType, NumberType rightNumberType){
 		 HashMap<Number, Number> map = new  HashMap<Number, Number>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(fileArr[i]));
@@ -655,27 +655,27 @@ public class FileTool {
 	/**
 	 * 将文本中的k和v列读取到map中
 	 *  
-	 *  @param filePath
+	 *  @param srcFile
 	 *  @param k 将k列作为map的key
 	 *  @param v 将v列作为map的alue
 	 *  @return Map<Number, Number>
 	 */
-	public Map<Number, Number> read2Map(String filePath, int k, int v){
-		return this.read2Map(filePath, k, NumberType.INTEGER, v, NumberType.INTEGER);
+	public Map<Number, Number> read2Map(String srcFile, int k, int v){
+		return this.read2Map(srcFile, k, NumberType.INTEGER, v, NumberType.INTEGER);
 	}
 	/**
 	 * 将文本中的k和v列读取到map中
 	 *  
-	 *  @param filePath
+	 *  @param srcFile
 	 *  @param k 将k列作为map的key
 	 *  @param leftNumberType k的类型
 	 *  @param v 将v列作为map的alue
 	 *  @param rightNumberType v的类型
 	 *  @return Map<Number, Number>
 	 */
-	public Map<Number, Number> read2Map(String filePath, int k, NumberType leftNumberType, int v, NumberType rightNumberType){
+	public Map<Number, Number> read2Map(String srcFile, int k, NumberType leftNumberType, int v, NumberType rightNumberType){
 		 Map<Number, Number> map = new  HashMap<Number, Number>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
@@ -704,15 +704,15 @@ public class FileTool {
 	/**
 	 * 将文本中的k和v列读取到map中
 	 *  
-	 *  @param filePath 文件路径或者目录
+	 *  @param srcFile 文件路径或者目录
 	 *  @param k 将k列作为map的key
 	 *  @param v 将v列作为map的alue
 	 *  @param numberType 节点的类型
 	 *  @return Map<Number, Number>
 	 */
-	public Map<Number, Number> read2Map(String filePath, int k, int v, NumberType numberType){
+	public Map<Number, Number> read2Map(String srcFile, int k, int v, NumberType numberType){
 		 Map<Number, Number> map = new  HashMap<Number, Number>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
@@ -740,14 +740,14 @@ public class FileTool {
 	/**
 	 *  
 	 *  读取文件的内容到pair中
-	 * @param filePath
+	 * @param srcFile
 	 * @param numberType
 	 * @return Set<Pair>
 	 */
-	public Set<Pair<Number>> read2SetPair(String filePath, NumberType numberType){
+	public Set<Pair<Number>> read2SetPair(String srcFile, NumberType numberType){
 		// HashMap<Number, Number> map = new  HashMap<Number, Number>();
 		 HashSet<Pair<Number>> pair = new HashSet<Pair<Number>>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
 				@SuppressWarnings("resource")
@@ -775,14 +775,14 @@ public class FileTool {
 	/**
 	 *  
 	 *  读取文件的内容到List<Pair<Number>>中
-	 * @param filePath
+	 * @param srcFile
 	 * @param numberType
 	 * @return HashSet<Pair>
 	 */
-	public List<Pair<Number>> read2ListPair(String filePath, NumberType numberType){
+	public List<Pair<Number>> read2ListPair(String srcFile, NumberType numberType){
 		// HashMap<Number, Number> map = new  HashMap<Number, Number>();
 		 List<Pair<Number>> pair = new ArrayList<Pair<Number>>();
-		 File[] fileArr = this.fileArr(filePath);
+		 File[] fileArr = this.fileArr(srcFile);
 		 for (int i = 0; i < fileArr.length; i++) {
 			try {
 				@SuppressWarnings("resource")
