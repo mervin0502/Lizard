@@ -99,7 +99,7 @@ public class Extract {
 					}
 				}//for fileArr
 				
-				pools.shutdown();
+/*				pools.shutdown();
 				try {
 					pools.awaitTermination(1, TimeUnit.SECONDS);
 				} catch (InterruptedException e) {
@@ -119,16 +119,17 @@ public class Extract {
 					}
 				}
 				//保证1,2步的完成后在执行下面的程序
-				if(pools.isTerminated()){
+				if(pools.isTerminated()){*/
 					/*
 					 * 3, combine the file by as
 					 */
 					/*
 					 * split file by as
 					 */
+				   D.m();
 					srcDir = "/media/data/data/temp/";
 					dstDir = "/media/data/data/temp/splitByAS/";
-					CombFileByAS o = null;
+					//CombFileByAS o = null;
 					File f = null;
 					fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
 					ft.clear(dstDir);
@@ -136,14 +137,16 @@ public class Extract {
 						f = fileArr1[i];
 						if(f.isDirectory()){
 							D.p(f.getAbsolutePath()+"/"+date+".txt");
-							o = new CombFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
-							o.splitFileByAS();
+							t = new splitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
+							pools.execute(t);
+							//o.splitFileByAS();
 						}//if
 					}//for i
 					
 					/*
 					 * stat path
 					 */
+					
 					srcDir = dstDir;
 					dstDir = "/media/data/data/path/"+y+"/"+date+"/";
 					ft.clear(dstDir);
@@ -154,8 +157,9 @@ public class Extract {
 						D.p(f.getAbsolutePath());
 						srcFile = f.getAbsolutePath();
 						dstFile = dstDir+f.getName();
-						o = new CombFileByAS(srcFile, dstFile);
-						o.statPath();
+						t = new StatPath(srcFile, dstFile);
+						pools.execute(t);
+						//o.statPath();
 						
 					}
 /*					
@@ -182,7 +186,7 @@ public class Extract {
 					dstFile = "/media/data/data/pathByM/"+date+"-edgeFreq.txt";
 					o = new CombFileByAS(srcFile, dstFile);
 					o.statEdgeFreq();*/
-				}
+//				}
 				
 			}//months
 		}//years			

@@ -23,7 +23,7 @@ import me.mervin.util.Pair;
 
 
  /**
- *   CombFileByAS.java
+ *   splitFileByAS.java
  *    
  *  @author Mervin.Wong  DateTime 2014-4-13 上午11:07:36    
  *  @version 0.4.0
@@ -73,7 +73,7 @@ import me.mervin.util.Pair;
 
 }*/
 
-public class CombFileByAS{
+public class splitFileByAS extends Thread{
 //	private FileTool ft = new FileTool();
 	
 	private String srcDir = null;
@@ -83,19 +83,19 @@ public class CombFileByAS{
 	private String srcFile = null;
 	private String dstFile = null;
 	
-	public CombFileByAS(){
+	public splitFileByAS(){
 		
 	}
-	public CombFileByAS(String srcDir, LinkedList<Integer> path){
+	public splitFileByAS(String srcDir, LinkedList<Integer> path){
 		this.srcDir = srcDir;
 		this.path = path;
 	}
-	public CombFileByAS(String srcFile, String dstFile){
+	public splitFileByAS(String srcFile, String dstFile){
 		this.srcFile = srcFile;
 		this.dstFile = dstFile;
 	}
 
-	public void splitFileByAS(){
+	private void _splitFileByAS(){
 		String dstFile = null;
 		BufferedReader read = null;
 		String line = null;
@@ -109,11 +109,31 @@ public class CombFileByAS{
 				lineArr = line.split("\\s+");
 				dstFile = this.srcFile+lineArr[0];
 				write = new RandomAccessFile(new File(dstFile), "rw");
+				 //对该文件加锁  
+				FileChannel fcout=write.getChannel();  
+				FileLock flout=null;  
+				while(true){  
+				    try {  
+				        flout = fcout.tryLock();  
+				        break;  
+				    } catch (Exception e) {  
+				         System.out.println("有其他线程正在操作该文件，当前线程休眠1000毫秒");   
+				         try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e1) {
+							// TODO 自动生成的 catch 块
+							e1.printStackTrace();
+						}    
+				    }  
+				      
+				}  
 				long size = write.length();
 				write.seek(size);
 				write.writeBytes(line+"\r\n");
+				flout.release();
+				fcout.close();
 				write.close();
-			}
+			}//while
 		} catch (FileNotFoundException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
