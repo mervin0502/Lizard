@@ -26,8 +26,8 @@ public class Extract {
 		String dstDir = null;
 		String srcFile = null;
 		String dstFile = null;
-		int[] years = {2013};
-		int[] months = {9, 10, 11};
+		int[] years = {2014};
+		int[] months = {1, 2, 3, 4};
 
 		ExecutorService pools = null;
 		File[] fileArr1 = null, fileArr2 = null;
