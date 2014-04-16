@@ -160,9 +160,9 @@ public class Extract {
 						o.statPath();
 						
 					}
-					/*
+/*					
 					 * combine file
-					 */
+					 
 					srcDir = dstDir;
 					dstDir = "/media/data/data/pathByM/";
 					fileArr1 = new File(srcDir).listFiles();
@@ -177,13 +177,13 @@ public class Extract {
 					}
 					
 					
-					/*
+					
 					 * stat edge freq
-					 */
+					 
 					srcFile = dstFile;
 					dstFile = "/media/data/data/pathByM/"+date+"-edgeFreq.txt";
 					o = new CombFileByAS(srcFile, dstFile);
-					o.statEdgeFreq();
+					o.statEdgeFreq();*/
 				}
 				
 			}//months
