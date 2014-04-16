@@ -12,6 +12,7 @@ import java.util.Set;
 
 import me.mervin.core.Global.NumberType;
 import me.mervin.model.NWNetwork;
+import me.mervin.util.D;
 import me.mervin.util.FileTool;
 import me.mervin.util.Pair;
 
@@ -26,13 +27,54 @@ public class Betweenness {
 	private String srcFile = null;
 	private String dstFile = null;
 	private FileTool ft = new FileTool();
-	private Map<Integer, Integer> betweennessMap = new HashMap<Integer, Integer>();
+	private Map<Number, Number> betweennessMap = new HashMap<Number, Number>();
+	
+	public Betweenness(String srcFile, String dstFile){
+		this.srcFile = srcFile;
+		this.dstFile = dstFile;
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-			
+//		String srcFile = "G:\\data\\201308-path.txt";
+		String srcFile = "G:\\data\\test.txt";
+		String dstFile = "G:\\data\\res.txt";
+//		String dstFile = "G:\\data\\201308-betweenness.txt";
+		Betweenness b = new Betweenness(srcFile, dstFile);
+		b.script();
 	}
 	
+	public void script(){
+		Map<Pair<Integer>, HashSet<LinkedList<Integer>>> pathMap = null;
+		/*
+		 * 1,get the first column's node(AS) in the text
+		 */
+		Set<Number> firstNodeSet = this._getAllFirstNode();
+		
+		for(Number firstNode:firstNodeSet){
+			D.p("firstNode=>"+firstNode);
+			/*
+			 * 2,get the path with the same first ndoe
+			 */
+			pathMap = this._getPathByFirtNode(firstNode.intValue());
+			for(HashSet<LinkedList<Integer>> pathSet:pathMap.values()){
+				
+				/*
+				 * 3, calculate the betweenness according the 
+				 */
+				this._calculateBetweenness(pathSet);
+			}
+		}
+		/*
+		 * write betweennessMap to the file 
+		 */
+		ft.write(betweennessMap, dstFile);
+	}
 	
+	/******************************************************************
+	 * 
+	 * private method
+	 * @return
+	 */
 	
 	/*
 	 * 获取文本文件中第一列的节点ID
@@ -91,4 +133,33 @@ public class Betweenness {
 	/*
 	 * 计算节点介数
 	 */
+	private void _calculateBetweenness(HashSet<LinkedList<Integer>> pathSet) {
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		
+		for (LinkedList<Integer> ll : pathSet) {
+			ll.pollFirst();
+			ll.pollLast();
+			if(!ll.isEmpty()){
+				for(int l:ll){
+					if(map.containsKey(l)){
+						map.put(l, map.get(l)+1);
+					}else{
+						map.put(l, 1);
+					}
+				}
+			}//if
+		}//for
+		
+		
+		for(int k:map.keySet()){
+			double v = 0;
+			if(this.betweennessMap.containsKey(k)){
+				v = this.betweennessMap.get(k).doubleValue()+(double)map.get(k)/pathSet.size();
+			}else{
+				v = (double)map.get(k)/pathSet.size();
+			}
+			this.betweennessMap.put(k, v);
+		}
+		
+	}
 }
