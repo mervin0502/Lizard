@@ -83,13 +83,11 @@ public class Extract {
 						}
 					}//for fileArr2
 				}//for fileArr1
-				//pools.shutdown();
 				/*
 				 * 2, combine the file by date
 				 */
 				srcDir = "/media/data/data/res/";
-				dstDir = "/media/data/data/pathByM/";
-				//pools = Executors.newFixedThreadPool(2);
+				dstDir = "/media/data/data/temp/";
 				fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
 				String name = null;
 				for (int i = 0; i < fileArr1.length; i++) {
@@ -128,12 +126,12 @@ public class Extract {
 					/*
 					 * split file by as
 					 */
-					D.m(3.1);
-					srcDir = "/media/data/data/pathByM/";
-					dstDir = "/media/data/data/pathByM/splitByAS/";
+					srcDir = "/media/data/data/temp/";
+					dstDir = "/media/data/data/temp/splitByAS/";
 					CombFileByAS o = null;
 					File f = null;
 					fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
+					ft.clear(dstDir);
 					for (int i = 0; i < fileArr1.length; i++) {
 						f = fileArr1[i];
 						if(f.isDirectory()){
@@ -147,7 +145,7 @@ public class Extract {
 					 * stat path
 					 */
 					srcDir = dstDir;
-					dstDir = "/media/data/data/pathByM/statPath/";
+					dstDir = "/media/data/data/path/"+y+"/"+date+"/";
 					ft.clear(dstDir);
 					fileArr1 = new File(srcDir).listFiles();
 					
