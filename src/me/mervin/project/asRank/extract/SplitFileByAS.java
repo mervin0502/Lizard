@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 
 import me.mervin.util.D;
 import me.mervin.util.FileTool;
+import me.mervin.util.LRU;
 import me.mervin.util.Pair;
 
 
@@ -26,54 +27,10 @@ import me.mervin.util.Pair;
  *   splitFileByAS.java
  *    
  *  @author Mervin.Wong  DateTime 2014-4-13 上午11:07:36    
- *  @version 0.4.0
+ *  @version 0.5.0
  */
-//public class CombFileByAS {
 
-	/**
-	 */
-/*	public CombFileByAS() {
-		// TODO 自动生成的构造函数存根
-	}
-
-	*//**
-	 *  
-	 *  @param args
-	 *//*
-	public static void main(String[] args) {
-		// TODO 自动生成的方法存根
-		
-		 * splitByAs
-		 
-		int[] years = {2014};
-		int[] months = {4};
-		String srcDir = "/media/data/data/pathByM/";
-		String dstDir = "/media/data/data/pathByM/splitByAS/";
-		String dstFile = null;
-		String srcFile = null;
-		FileTool ft = new FileTool();
-		File[] fileArr = null;
-		File f1 = null;
-		String prefix = null;
-		CombFileByAS o = null;
-		ft.clear(dstDir);
-		for(int y:years){
-			for(int m:months){
-				if(m<10){
-					prefix = y+"0"+m;
-				}else{
-					prefix = y+""+m;
-				}
-
-
-			}
-				
-			}//for m
-		}//for y
-
-}*/
-
-public class splitFileByAS extends Thread{
+public class SplitFileByAS extends Thread{
 //	private FileTool ft = new FileTool();
 	
 	private String srcDir = null;
@@ -83,14 +40,15 @@ public class splitFileByAS extends Thread{
 	private String srcFile = null;
 	private String dstFile = null;
 	
-	public splitFileByAS(){
+	private static LRU<Integer, RandomAccessFile> fileCacheLru = new LRU(50);
+	public SplitFileByAS(){
 		
 	}
-	public splitFileByAS(String srcDir, LinkedList<Integer> path){
+	public SplitFileByAS(String srcDir, LinkedList<Integer> path){
 		this.srcDir = srcDir;
 		this.path = path;
 	}
-	public splitFileByAS(String srcFile, String dstFile){
+	public SplitFileByAS(String srcFile, String dstFile){
 		this.srcFile = srcFile;
 		this.dstFile = dstFile;
 	}
@@ -111,7 +69,14 @@ public class splitFileByAS extends Thread{
 			while((line = read.readLine()) != null){
 				lineArr = line.split("\\s+");
 				dstFile = this.srcFile+lineArr[0];
-				write = new RandomAccessFile(new File(dstFile), "rw");
+				int key = Integer.parseInt(lineArr[0]);
+				if(SplitFileByAS.fileCacheLru.containsKey(key)){
+					write = SplitFileByAS.fileCacheLru.get(key);
+				}else{
+					write = new RandomAccessFile(new File(dstFile), "rw");
+					SplitFileByAS.fileCacheLru.put(key, write);
+				}
+				
 				 //对该文件加锁  
 				FileChannel fcout=write.getChannel();  
 				FileLock flout=null;  

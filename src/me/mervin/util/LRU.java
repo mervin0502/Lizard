@@ -6,6 +6,8 @@ package me.mervin.util;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import sun.security.action.GetBooleanAction;
 
@@ -28,6 +30,8 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 	 * have cached number currently 
 	 */
 	private  int capacity = 0;
+	
+	private final Lock lock = new ReentrantLock();
 	/**
 	 * constructor function
 	 */
@@ -64,7 +68,34 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 		super(initialCapacity, loadFactor, isLRU);
 		this.capacity = capacity;
 	}
-	
+	/**
+	 * @param k
+	 * @return V
+	 */
+	public V get(Object k){
+		lock.lock();
+		try{
+			return super.get(k);
+		}finally{
+			lock.unlock();
+		}
+	}
+	/**
+	 * @param k
+	 * @param v
+	 * @return V
+	 */
+	public V put(K k, V v){
+		lock.lock();
+		try{
+			return super.put(k, v);
+		}finally{
+			lock.unlock();
+		}
+	}
+	/*
+	 * 
+	 */
 	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 		return size() > this.capacity;
 		
@@ -72,46 +103,6 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 	
 	public static void main(String[] args) {  
 		  
-	    LinkedHashMap<String, String> map = new LRU<String, String>(16, 0.75f, true);  
-	    map.put("a", "a"); //a  a  
-	    map.put("b", "b"); //a  a b  
-	    map.put("c", "c"); //a  a b c  
-	    map.put("a", "a"); //   b c a       
-	    map.put("d", "d"); //b  b c a d  
-	    map.put("a", "a"); //   b c d a  
-	    map.put("b", "b"); //   c d a b       
-	    map.put("f", "f"); //c  c d a b f  
-	    map.put("g", "g"); //c  c d a b f g  
-	  
-	    map.get("d"); //c a b f g d  
-	    for (Entry<String, String> entry : map.entrySet()) {  
-	        System.out.print(entry.getValue() + ", ");  
-	    }  
-	    System.out.println();  
-	  
-	    map.get("a"); //c b f g d a  
-	    for (Entry<String, String> entry : map.entrySet()) {  
-	        System.out.print(entry.getValue() + ", ");  
-	    }  
-	    System.out.println();  
-	  
-	    map.get("c"); //b f g d a c  
-	    for (Entry<String, String> entry : map.entrySet()) {  
-	        System.out.print(entry.getValue() + ", ");  
-	    }  
-	    System.out.println();  
-	  
-	    map.get("b"); //f g d a c b  
-	    for (Entry<String, String> entry : map.entrySet()) {  
-	        System.out.print(entry.getValue() + ", ");  
-	    }  
-	    System.out.println();  
-	  
-	    map.put("h", "h"); //f  f g d a c b h  
-	    for (Entry<String, String> entry : map.entrySet()) {  
-	        System.out.print(entry.getValue() + ", ");  
-	    }  
-	    System.out.println();  
 	}  
 	
 	

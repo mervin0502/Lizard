@@ -118,7 +118,7 @@ public class Extract {
 					f = fileArr1[i];
 					if(f.isDirectory()){
 						D.p("split file by AS=>"+f.getAbsolutePath()+"/"+date+".txt");
-						t = new splitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
+						t = new SplitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
 						t.run();
 						//pools.execute(t);
 						//o.splitFileByAS();
