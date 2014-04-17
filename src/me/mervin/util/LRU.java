@@ -26,6 +26,7 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 	 */
 	public static final int MAX_CAPACITY = 20;
 	
+	public Map.Entry<K, V> eldest = null;
 	/*
 	 * have cached number currently 
 	 */
@@ -97,14 +98,56 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 	 * 
 	 */
 	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-		return size() > this.capacity;
-		
+		if(size() > this.capacity){
+			this.eldest = eldest;
+			return true;
+		}else{
+			this.eldest = null;
+			return false;
+		}
 	}
 	
 	public static void main(String[] args) {  
+		   LinkedHashMap<String, String> map = new LRU<String, String>(3, 0.75f, true, 3);  
+		    map.put("a", "a"); //a  a  
+		    map.put("b", "b"); //a  a b  
+		    map.put("c", "c"); //a  a b c  
+		    map.put("a", "a"); //   b c a       
+		    map.put("d", "d"); //b  b c a d  
+		    map.put("a", "a"); //   b c d a  
+		    map.put("b", "b"); //   c d a b       
+		    map.put("f", "f"); //c  c d a b f  
+		    map.put("g", "g"); //c  c d a b f g  
 		  
+		    map.get("d"); //c a b f g d  
+		    for (Entry<String, String> entry : map.entrySet()) {  
+		        System.out.print(entry.getValue() + ", ");  
+		    }  
+		    System.out.println();  
+		  
+		    map.get("a"); //c b f g d a  
+		    for (Entry<String, String> entry : map.entrySet()) {  
+		        System.out.print(entry.getValue() + ", ");  
+		    }  
+		    System.out.println();  
+		  
+		    map.get("c"); //b f g d a c  
+		    for (Entry<String, String> entry : map.entrySet()) {  
+		        System.out.print(entry.getValue() + ", ");  
+		    }  
+		    System.out.println();  
+		  
+		    map.get("b"); //f g d a c b  
+		    for (Entry<String, String> entry : map.entrySet()) {  
+		        System.out.print(entry.getValue() + ", ");  
+		    }  
+		    System.out.println();  
+		  
+		    map.put("h", "h"); //f  f g d a c b h  
+		    for (Entry<String, String> entry : map.entrySet()) {  
+		        System.out.print(entry.getValue() + ", ");  
+		    }  
+		    System.out.println();  
 	}  
-	
-	
 
 }

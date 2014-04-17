@@ -75,10 +75,15 @@ public class SplitFileByAS extends Thread{
 				}else{
 					write = new RandomAccessFile(new File(dstFile), "rw");
 					SplitFileByAS.fileCacheLru.put(key, write);
+					if(SplitFileByAS.fileCacheLru.eldest != null){
+						SplitFileByAS.fileCacheLru.eldest.getValue().close();
+					}
+					long size = write.length();
+					write.seek(size);
 				}
 				
 				 //对该文件加锁  
-				FileChannel fcout=write.getChannel();  
+/*				FileChannel fcout=write.getChannel();  
 				FileLock flout=null;  
 				while(true){  
 				    try {  
@@ -93,13 +98,11 @@ public class SplitFileByAS extends Thread{
 						}    
 				    }  
 				      
-				}  
-				long size = write.length();
-				write.seek(size);
+				}  */
 				write.writeBytes(line+"\r\n");
-				flout.release();
-				fcout.close();
-				write.close();
+				//flout.release();
+				//fcout.close();
+				//write.close();
 			}//while
 		} catch (FileNotFoundException e) {
 			// TODO 自动生成的 catch 块
