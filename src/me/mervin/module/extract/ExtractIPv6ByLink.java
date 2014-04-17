@@ -1,4 +1,4 @@
-package me.mervin.util.extract;
+package me.mervin.module.extract;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;

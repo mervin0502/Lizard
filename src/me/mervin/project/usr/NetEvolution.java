@@ -32,10 +32,10 @@ import java.util.Set;
 import me.mervin.core.Network;
 import me.mervin.core.Global.NetType;
 import me.mervin.core.Global.NumberType;
+import me.mervin.module.extract.EdgeDeweigh;
 import me.mervin.module.feature.Degree;
 import me.mervin.module.feature.MultiNet;
 import me.mervin.util.D;
-import me.mervin.util.EdgeDeweigh;
 import me.mervin.util.FileTool;
 import me.mervin.util.MathTool;
 /**

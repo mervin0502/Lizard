@@ -1,4 +1,4 @@
-package me.mervin.util.extract;
+package me.mervin.module.extract;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -26,7 +26,7 @@ import me.mervin.core.Global.extractIP;
  * 3，sc_analysis_dump XXX.wrats > out.txt 将上一步生成的文件转换成文本格式并提取出想要的内容.sc_analysis_dump有多个参数可选择
  * 4，使用本程序开提取所需要的信息。例如，	ExtractIpLink ipLink = new ExtractIpLink("./data/ip.txt","./data/ips.txt",ExtractIpLink.extractContent.LINK_ALL);ipLink.run();
  ***************************************************************************************/
-public class ExtractIPv4ByLink {
+public class ExtractIPByLink {
 	private String fileName = null; //文件名
 	private String dstPath = null;//保存的文件名
 	//提起内容内容的格式
@@ -38,7 +38,7 @@ public class ExtractIPv4ByLink {
 	 * @param  dstPath 
 	 * 
 	 */
-	public ExtractIPv4ByLink(String fileName, String dstPath){
+	public ExtractIPByLink(String fileName, String dstPath){
 		this.fileName = fileName;
 		this.dstPath = dstPath;
 		//this.extractContentValue = extractContent.SOURCE_DESTINATION;
@@ -51,21 +51,17 @@ public class ExtractIPv4ByLink {
 	 * @param  dstPath 
 	 * @param  extractContentValue
 	 */
-	public ExtractIPv4ByLink(String fileName, String dstPath, extractIP extractContentValue){
+	public ExtractIPByLink(String fileName, String dstPath, extractIP extractContentValue){
 		this.fileName = fileName;
 		this.dstPath = dstPath;
 		this.extractContentValue = extractContentValue;
 		this.ids  = new ArrayList<Long>();
 	} 
 	
-	public void script(){
-		this.script(false);
-	}
-	public void script(boolean ip) {
+	public void run() {
 		
 		try {
 				BufferedReader reader = new BufferedReader(new FileReader(this.fileName));
-				//new FileTool().mkdir(this.dstPath, true);
 				BufferedWriter writer = new BufferedWriter(new FileWriter(this.dstPath));
 				String line = null;
 				Pattern p = null;
@@ -84,12 +80,12 @@ public class ExtractIPv4ByLink {
 						case LINK_I:
 							if(line.contains("I")){
 								m.find();
-								sourceIp = this._ipToInt(m.group());
+								sourceIp = this.ipToInt(m.group());
 								m.find();
-								destinationIp = this._ipToInt(m.group());
+								destinationIp = this.ipToInt(m.group());
 								str += sourceIp+"\t";
 								while(m.find()){
-									nextIp = this._ipToInt(m.group());
+									nextIp = this.ipToInt(m.group());
 									str += nextIp+"\r\n"+nextIp+"\t"; 
 								}
 								str += destinationIp+"\r\n";
@@ -107,12 +103,12 @@ public class ExtractIPv4ByLink {
 						case LINK_C:
 							if(line.contains("C")){
 								m.find();
-								sourceIp = this._ipToInt(m.group());
+								sourceIp = this.ipToInt(m.group());
 								m.find();
-								destinationIp =  this._ipToInt(m.group());
+								destinationIp =  this.ipToInt(m.group());
 								str += sourceIp+"\t";
 								while(m.find()){
-									nextIp = this._ipToInt(m.group());
+									nextIp = this.ipToInt(m.group());
 									str += nextIp+"\r\n"+nextIp+"\t"; 
 								}
 								str += destinationIp+"\r\n";
@@ -129,13 +125,13 @@ public class ExtractIPv4ByLink {
 						//获取路由每跳
 						case LINK_ALL:
 							m.find();
-							sourceIp = this._ipToInt(m.group());
+							sourceIp = this.ipToInt(m.group());
 							m.find();
-							destinationIp = this._ipToInt(m.group());
+							destinationIp = this.ipToInt(m.group());
 							temp = sourceIp+"\t";
 								while(m.find()){
 									flag++;
-									nextIp = this._ipToInt(m.group());
+									nextIp = this.ipToInt(m.group());
 									temp += nextIp+"\r\n"+nextIp+"\t"; 
 								}
 								
@@ -162,9 +158,9 @@ public class ExtractIPv4ByLink {
 						case SOURCE_DESTINATION:
 						default :
 							m.find();
-							sourceIp = this._ipToInt(m.group());
+							sourceIp = this.ipToInt(m.group());
 							m.find();
-							destinationIp = this._ipToInt(m.group());
+							destinationIp = this.ipToInt(m.group());
 							str += sourceIp+"\t"+destinationIp+"\r\n";
 							if(str.length() > 1024){
 								str += destinationIp+"\r\n";
@@ -193,7 +189,7 @@ public class ExtractIPv4ByLink {
 		}
 	}
 	
-	private Long _ipToInt(String ipStr){
+	private Long ipToInt(String ipStr){
 		//Debug.p(ipStr);
 		String[] ipArr = ipStr.split("\\.");
 		return (Long.parseLong(ipArr[0].toString())<<24)+(Long.parseLong(ipArr[1].toString())<<16)+(Long.parseLong(ipArr[2].toString())<<8)+(Long.parseLong(ipArr[3].toString()));

@@ -12,7 +12,7 @@ import me.mervin.util.MathTool;
 
 /**
  * 	DegreeAndCC.java
- * calculate the 
+ * calculate the degree vs. clustercofficient
  * @author Mervin Time: 2014年4月16日 下午8:27:20
  * @email:mervin0502@163.com
  * @version 0.5.0
@@ -30,6 +30,10 @@ public class DegreeAndCC {
 		this.net = net;
 	}
 	
+	/**
+	 * 
+	 * @return Map<Number, Number>
+	 */
 	public Map<Number, Number> script(){
 		
 		Map<Number, Number> v = null;	
@@ -72,6 +76,11 @@ public class DegreeAndCC {
 		}
 		return v;
 	}
+	/**
+	 * 
+	 * @param net network object
+	 * @return Map<Number, Number>
+	 */
 	public Map<Number, Number> script(Network net){
 		this.net = net;
 		return this.script();

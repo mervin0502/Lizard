@@ -1,4 +1,4 @@
-package me.mervin.util.extract;
+package me.mervin.module.extract;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.mervin.core.Global.extractIP;
+import me.mervin.util.D;
 
 /**
  * ExtractIpLink.java
@@ -26,7 +27,7 @@ import me.mervin.core.Global.extractIP;
  * 3，sc_analysis_dump XXX.wrats > out.txt 将上一步生成的文件转换成文本格式并提取出想要的内容.sc_analysis_dump有多个参数可选择
  * 4，使用本程序开提取所需要的信息。例如，	ExtractIpLink ipLink = new ExtractIpLink("./data/ip.txt","./data/ips.txt",ExtractIpLink.extractContent.LINK_ALL);ipLink.run();
  ***************************************************************************************/
-public class ExtractIPByLink {
+public class ExtractIPv6 {
 	private String fileName = null; //文件名
 	private String dstPath = null;//保存的文件名
 	//提起内容内容的格式
@@ -38,7 +39,7 @@ public class ExtractIPByLink {
 	 * @param  dstPath 
 	 * 
 	 */
-	public ExtractIPByLink(String fileName, String dstPath){
+	public ExtractIPv6(String fileName, String dstPath){
 		this.fileName = fileName;
 		this.dstPath = dstPath;
 		//this.extractContentValue = extractContent.SOURCE_DESTINATION;
@@ -51,7 +52,7 @@ public class ExtractIPByLink {
 	 * @param  dstPath 
 	 * @param  extractContentValue
 	 */
-	public ExtractIPByLink(String fileName, String dstPath, extractIP extractContentValue){
+	public ExtractIPv6(String fileName, String dstPath, extractIP extractContentValue){
 		this.fileName = fileName;
 		this.dstPath = dstPath;
 		this.extractContentValue = extractContentValue;
@@ -73,7 +74,9 @@ public class ExtractIPByLink {
 					line = line.trim();
 					if(line.startsWith("T")){
 						//System.out.println(line.trim());
-						p = Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
+						//p = Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
+						p = Pattern.compile("([a-fA-F0-9]{0,4}:{1,2}){1,7}[a-fA-F0-9]{1,4}");
+						D.p(line);
 						Matcher m = p.matcher(line);
 						switch(this.extractContentValue){
 						//获取路由每跳，且最后一条不可达
@@ -189,9 +192,59 @@ public class ExtractIPByLink {
 		}
 	}
 	
-	private Long ipToInt(String ipStr){
-		//Debug.p(ipStr);
-		String[] ipArr = ipStr.split("\\.");
-		return (Long.parseLong(ipArr[0].toString())<<24)+(Long.parseLong(ipArr[1].toString())<<16)+(Long.parseLong(ipArr[2].toString())<<8)+(Long.parseLong(ipArr[3].toString()));
+	public Long ipToInt(String ipStr){
+		/*
+		 * 存在省略0的情况
+		 */
+		if(ipStr.contains("::")){
+			StringBuffer sb = new StringBuffer();
+			String strL = null, strR = null; 
+			String[] strArr = ipStr.trim().split("::");
+			
+			String[] strLArr = null, strRArr = null;
+			if(!strArr[0].isEmpty()){
+				// a:b:c::d:1
+				strL = strArr[0];
+				strR = strArr[1];
+				
+				strLArr = strL.split(":");
+				strRArr = strR.split(":");
+				
+				sb.append(strL);
+				//加 0
+				for(int i = 0; i < 8- strLArr.length - strRArr.length; i++){
+					sb.append(":").append(0);
+				}
+				sb.append(":").append(strR);
+				
+				ipStr = sb.toString();
+			}else{
+				//::a:b:1
+				strR = strArr[1];
+				
+				strRArr = strR.split(":");
+				//加 0
+				for(int i = 0; i < 8 - strRArr.length; i++){
+					sb.append(0).append(":");
+				}
+				sb.append(strR);
+				
+				ipStr = sb.toString();
+			}
+		}
+		D.p(ipStr);
+		String[] ipArr = ipStr.split(":");
+		D.p(ipArr.length);
+		for(int j = 8; j > 0; j--){
+			//Long.parseLong(ipArr[8-j].toString(), 16) << (j-1)*16;
+		}
+		//return (Long.parseLong(ipArr[0].toString())<<24)+(Long.parseLong(ipArr[1].toString())<<16)+(Long.parseLong(ipArr[2].toString())<<8)+(Long.parseLong(ipArr[3].toString()));
+		return (long) 10;
 	}	
+	
+	public  static void main(String[] args){
+		ExtractIPv6 e = new ExtractIPv6("../data/456.txt", "../data/ipv6.txt", extractIP.LINK_ALL);
+		e.ipToInt("::2");
+		
+	}
 }

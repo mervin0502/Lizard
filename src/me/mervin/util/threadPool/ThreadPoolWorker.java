@@ -1,4 +1,4 @@
-package me.mervin.module.threadPool;
+package me.mervin.util.threadPool;
 
 import me.mervin.util.D;
 

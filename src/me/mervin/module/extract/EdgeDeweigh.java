@@ -3,7 +3,7 @@
  *
  *
  **********************************************************************************/
-package me.mervin.util;
+package me.mervin.module.extract;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,6 +16,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import me.mervin.core.Global.*;
+import me.mervin.util.D;
+import me.mervin.util.FileTool;
+import me.mervin.util.MathTool;
+import me.mervin.util.Pair;
+import me.mervin.util.PairSet;
 /**
  * EdgeDeweigh.java
  * 

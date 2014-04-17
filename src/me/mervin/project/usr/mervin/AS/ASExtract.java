@@ -8,8 +8,8 @@ import java.util.Vector;
 
 import me.mervin.core.Global.ExtractAS;
 import me.mervin.core.Global.NumberType;
+import me.mervin.module.extract.*;
 import me.mervin.util.D;
-import me.mervin.util.extract.*;
 import me.mervin.util.FileTool;
 
 public class ASExtract {
