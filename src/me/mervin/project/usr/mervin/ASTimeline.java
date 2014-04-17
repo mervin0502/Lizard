@@ -20,7 +20,7 @@ import me.mervin.core.Global.NetType;
 import me.mervin.core.Global.NumberType;
 import me.mervin.module.feature.Degree;
 import me.mervin.util.D;
-import me.mervin.util.ExtractASByLink;
+import me.mervin.util.extract.*;
 import me.mervin.util.FileTool;
 import me.mervin.util.MathTool;
 import me.mervin.util.StringTool;
