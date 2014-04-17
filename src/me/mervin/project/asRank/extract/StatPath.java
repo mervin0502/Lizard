@@ -24,41 +24,7 @@ public class StatPath extends Thread {
 		this.srcFile = srcFile;
 		this.dstFile = dstFile;
 	}
-	public StatPath(Runnable target) {
-		super(target);
-		// TODO 自动生成的构造函数存根
-	}
-
-	public StatPath(String name) {
-		super(name);
-		// TODO 自动生成的构造函数存根
-	}
-
-	public StatPath(ThreadGroup group, Runnable target) {
-		super(group, target);
-		// TODO 自动生成的构造函数存根
-	}
-
-	public StatPath(ThreadGroup group, String name) {
-		super(group, name);
-		// TODO 自动生成的构造函数存根
-	}
-
-	public StatPath(Runnable target, String name) {
-		super(target, name);
-		// TODO 自动生成的构造函数存根
-	}
-
-	public StatPath(ThreadGroup group, Runnable target, String name) {
-		super(group, target, name);
-		// TODO 自动生成的构造函数存根
-	}
-
-	public StatPath(ThreadGroup group, Runnable target, String name,
-			long stackSize) {
-		super(group, target, name, stackSize);
-		// TODO 自动生成的构造函数存根
-	}
+	
 
 	
 	public void run(){

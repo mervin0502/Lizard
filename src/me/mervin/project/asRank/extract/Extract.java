@@ -49,9 +49,9 @@ public class Extract {
 				/*
 				 * 1, extract all the path
 				 */
-				srcDir = "/media/data/data/src/";
+/*				srcDir = "/media/data/data/src/";
 				dstDir = "/media/data/data/res/";
-				pools = Executors.newFixedThreadPool(2);
+				//pools = Executors.newFixedThreadPool(2);
 				
 				
 				fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
@@ -66,7 +66,8 @@ public class Extract {
 							logFile = dstDir+y+"/"+date+"/"+"log.txt";
 							if(!ft.isExist(dstDir+y+"/"+date+"/"+name1+"/"+name2+"-path.txt")){
 								t = new ASPath(srcDir+y+"/"+date+"/"+name1+"/", dstDir+y+"/"+date+"/", name1, name2, logFile, "bz2");
-								pools.execute(t);
+								t.run();
+								//pools.execute(t);
 							}else{
 								D.p("File Exist:"+dstDir+y+"/"+date+"/"+name1+"/"+name2+"-path.txt");
 							}
@@ -76,16 +77,17 @@ public class Extract {
 							logFile = dstDir+y+"/"+date+"/"+"log.txt";
 							if(!ft.isExist(dstDir+y+"/"+date+"/"+name1+"/"+name2+"-path.txt")){
 								t = new ASPath(srcDir+y+"/"+date+"/"+name1+"/", dstDir+y+"/"+date+"/", name1, name2, logFile, "gz");
-								pools.execute(t);
+								t.run();
+								//pools.execute(t);
 							}else{
 								D.p("File Exist:"+dstDir+y+"/"+date+"/"+name1+"/"+name2+"-path.txt");
 							}
 						}
 					}//for fileArr2
 				}//for fileArr1
-				/*
+				
 				 * 2, combine the file by date
-				 */
+				 
 				srcDir = "/media/data/data/res/";
 				dstDir = "/media/data/data/temp/";
 				fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
@@ -95,98 +97,53 @@ public class Extract {
 						name = fileArr1[i].getName();
 						logFile = dstDir+y+"/"+date+"/log.txt";
 						t = new CombFileByDate(srcDir+y+"/"+date+"/"+name+"/", dstDir+y+"/"+date+"/"+name+"/", date, logFile);
-						pools.execute(t);
+						t.run();
+						//pools.execute(t);
 					}
 				}//for fileArr
+*/				
+				/*
+				 * 3, combine the file by as
+				 */
+				/*
+				 * 3.1 split file by as
+				 */
+				srcDir = "/media/data/data/temp/";
+				dstDir = "/media/data/data/temp/splitByAS/";
+				//CombFileByAS o = null;
+				File f = null;
+				fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
+				ft.clear(dstDir);
+				for (int i = 0; i < fileArr1.length; i++) {
+					f = fileArr1[i];
+					if(f.isDirectory()){
+						D.p("split file by AS=>"+f.getAbsolutePath()+"/"+date+".txt");
+						t = new splitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
+						t.run();
+						//pools.execute(t);
+						//o.splitFileByAS();
+					}//if
+				}//for i
 				
-/*				pools.shutdown();
-				try {
-					pools.awaitTermination(1, TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					// TODO 自动生成的 catch 块
-					e.printStackTrace();
+				/*
+				 * 3.2 stat path
+				 */
+				
+				srcDir = dstDir;
+				dstDir = "/media/data/data/path/"+y+"/"+date+"/";
+				ft.clear(dstDir);
+				fileArr1 = new File(srcDir).listFiles();
+				
+				for (int i = 0; i < fileArr1.length; i++) {
+					f = fileArr1[i];
+					D.p("statistics path=>"+f.getAbsolutePath());
+					srcFile = f.getAbsolutePath();
+					dstFile = dstDir+f.getName();
+					t = new StatPath(srcFile, dstFile);
+					t.run();
+					//pools.execute(t);
+					//o.statPath();
 				}
-				while(true){
-					if(pools.isTerminated()){
-						break;
-					}else{
-						try {
-							Thread.sleep(1000*60);
-						} catch (InterruptedException e) {
-							// TODO 自动生成的 catch 块
-							e.printStackTrace();
-						}
-					}
-				}
-				//保证1,2步的完成后在执行下面的程序
-				if(pools.isTerminated()){*/
-					/*
-					 * 3, combine the file by as
-					 */
-					/*
-					 * split file by as
-					 */
-				   D.m();
-					srcDir = "/media/data/data/temp/";
-					dstDir = "/media/data/data/temp/splitByAS/";
-					//CombFileByAS o = null;
-					File f = null;
-					fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
-					ft.clear(dstDir);
-					for (int i = 0; i < fileArr1.length; i++) {
-						f = fileArr1[i];
-						if(f.isDirectory()){
-							D.p(f.getAbsolutePath()+"/"+date+".txt");
-							t = new splitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
-							pools.execute(t);
-							//o.splitFileByAS();
-						}//if
-					}//for i
-					
-					/*
-					 * stat path
-					 */
-					
-					srcDir = dstDir;
-					dstDir = "/media/data/data/path/"+y+"/"+date+"/";
-					ft.clear(dstDir);
-					fileArr1 = new File(srcDir).listFiles();
-					
-					for (int i = 0; i < fileArr1.length; i++) {
-						f = fileArr1[i];
-						D.p(f.getAbsolutePath());
-						srcFile = f.getAbsolutePath();
-						dstFile = dstDir+f.getName();
-						t = new StatPath(srcFile, dstFile);
-						pools.execute(t);
-						//o.statPath();
-						
-					}
-/*					
-					 * combine file
-					 
-					srcDir = dstDir;
-					dstDir = "/media/data/data/pathByM/";
-					fileArr1 = new File(srcDir).listFiles();
-					
-					dstFile = dstDir+date+"-path.txt";
-					for (int i = 0; i < fileArr1.length; i++) {
-						f = fileArr1[i];
-						D.p(f.getAbsolutePath());
-						srcFile = f.getAbsolutePath();
-						o = new CombFileByAS(srcFile, dstFile);
-						o.combFile();
-					}
-					
-					
-					
-					 * stat edge freq
-					 
-					srcFile = dstFile;
-					dstFile = "/media/data/data/pathByM/"+date+"-edgeFreq.txt";
-					o = new CombFileByAS(srcFile, dstFile);
-					o.statEdgeFreq();*/
-//				}
 				
 			}//months
 		}//years			
