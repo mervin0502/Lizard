@@ -105,7 +105,9 @@ public class StatPath extends Thread {
 		
 		RandomAccessFile write;
 		try {
-			write = new RandomAccessFile(new File(dstFile), "rw");
+			File f = new File(dstFile);
+			f.getParentFile().mkdirs();
+			write = new RandomAccessFile(f, "rw");
 			 //对该文件加锁  
 			FileChannel fcout=write.getChannel();  
 			FileLock flout=null;  

@@ -27,7 +27,7 @@ public class Extract {
 		String srcFile = null;
 		String dstFile = null;
 		int[] years = {2014};
-		int[] months = {1, 2, 3, 4};
+		int[] months = {2, 3, 4};
 
 		ExecutorService pools = null;
 		File[] fileArr1 = null, fileArr2 = null;
@@ -121,7 +121,6 @@ public class Extract {
 						t = new splitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
 						t.run();
 						//pools.execute(t);
-						//o.splitFileByAS();
 					}//if
 				}//for i
 				
@@ -142,8 +141,7 @@ public class Extract {
 					t = new StatPath(srcFile, dstFile);
 					t.run();
 					//pools.execute(t);
-					//o.statPath();
-				}
+				}//for
 				
 			}//months
 		}//years			

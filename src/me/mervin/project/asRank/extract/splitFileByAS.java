@@ -113,7 +113,7 @@ public class splitFileByAS extends Thread{
 				dstFile = this.srcFile+lineArr[0];
 				write = new RandomAccessFile(new File(dstFile), "rw");
 				 //对该文件加锁  
-				FileChannel fcout=write.getChannel();  
+	/*			FileChannel fcout=write.getChannel();  
 				FileLock flout=null;  
 				while(true){  
 				    try {  
@@ -128,12 +128,12 @@ public class splitFileByAS extends Thread{
 						}    
 				    }  
 				      
-				}  
+				}  */
 				long size = write.length();
 				write.seek(size);
 				write.writeBytes(line+"\r\n");
-				flout.release();
-				fcout.close();
+//				flout.release();
+//				fcout.close();
 				write.close();
 			}//while
 		} catch (FileNotFoundException e) {
