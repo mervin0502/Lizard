@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.HashSet;
+import java.util.Set;
 
 import me.mervin.util.D;
 import me.mervin.util.FileTool;
@@ -86,9 +88,10 @@ public class Widgets {
 				String line = null;
 				String name1 = null;
 				RandomAccessFile f = null;
+				Set<Integer> nodeSet = new HashSet<Integer>();
 				while((line = reader.readLine())!= null){
 					String name2 = line.substring(0, line.indexOf("\t"));
-					if(!name2.equals(name1)){
+/*					if(!name2.equals(name1)){
 						if(name1 != null){
 							f.close();
 						}
@@ -96,9 +99,11 @@ public class Widgets {
 						f = new RandomAccessFile(new File(dstDir+file.getName().substring(0, file.getName().indexOf("-"))+"/"+name2), "rw");
 						f.seek(f.length());
 					}
-					f.writeBytes(line+"\r\n");
+					f.writeBytes(line+"\r\n");*/
+					nodeSet.add(Integer.parseInt(name2));
 				}
-				f.close();
+				D.p(file.getAbsolutePath()+""+nodeSet.size());
+//				f.close();
 			} catch (FileNotFoundException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();

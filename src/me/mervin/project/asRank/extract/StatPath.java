@@ -86,7 +86,7 @@ public class StatPath extends Thread {
 		
 		StringBuffer sb = new StringBuffer();
 		for(LinkedList<Integer> key:allPathMap.keySet()){
-			sb.append(allPathMap.get(key)).append("\t");
+			//sb.append(allPathMap.get(key)).append("\t");
 			for(Integer item : key){
 				sb.append(item).append("\t");
 			}
@@ -109,7 +109,7 @@ public class StatPath extends Thread {
 			f.getParentFile().mkdirs();
 			write = new RandomAccessFile(f, "rw");
 			 //对该文件加锁  
-			FileChannel fcout=write.getChannel();  
+/*			FileChannel fcout=write.getChannel();  
 			FileLock flout=null;  
 			while(true){  
 			    try {  
@@ -125,12 +125,12 @@ public class StatPath extends Thread {
 					}    
 			    }  
 			      
-			}  
+			}  */
 			long size = write.length();
 			write.seek(size);
 			write.writeBytes(sb.toString());
-			flout.release();
-			fcout.close();
+			//flout.release();
+			//fcout.close();
 			write.close();
 		} catch (FileNotFoundException e2) {
 			// TODO 自动生成的 catch 块
