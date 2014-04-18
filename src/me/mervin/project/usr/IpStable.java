@@ -4,8 +4,8 @@ import java.io.File;
 
 import me.mervin.core.Global.NetType;
 import me.mervin.core.Global.NumberType;
+import me.mervin.module.extract.EdgeDeweigh;
 import me.mervin.util.D;
-import me.mervin.util.EdgeDeweigh;
 
 
 public class IpStable {

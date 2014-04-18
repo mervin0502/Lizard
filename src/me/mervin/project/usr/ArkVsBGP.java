@@ -12,9 +12,8 @@ import java.util.Set;
 import java.util.Vector;
 
 import me.mervin.core.Global.NumberType;
+import me.mervin.module.extract.*;
 import me.mervin.util.D;
-import me.mervin.util.EdgeDeweigh;
-import me.mervin.util.ExtractIPv4ByLink;
 import me.mervin.util.FileTool;
 import me.mervin.util.MathTool;
 import me.mervin.util.Pair;

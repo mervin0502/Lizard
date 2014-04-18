@@ -2,8 +2,8 @@ package me.mervin.project.usr;
 
 import me.mervin.core.Global.ExtractAS;
 import me.mervin.core.Global.NumberType;
+import me.mervin.module.extract.*;
 import me.mervin.util.D;
-import me.mervin.util.ExtractASByLink;
 import me.mervin.util.FileTool;
 
 

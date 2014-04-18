@@ -1,4 +1,4 @@
-package me.mervin.util;
+package me.mervin.module.extract;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Vector;
 
 import me.mervin.core.Global.ExtractAS;
+import me.mervin.util.D;
+import me.mervin.util.FileTool;
+import me.mervin.util.MathTool;
 
 /*****************************************************
  * 在文本文件中提取AS连接

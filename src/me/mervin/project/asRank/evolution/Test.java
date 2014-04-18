@@ -4,8 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import me.mervin.core.Global.NetType;
+import me.mervin.module.extract.EdgeDeweigh;
 import me.mervin.util.D;
-import me.mervin.util.EdgeDeweigh;
 
 
 /**
