@@ -1,6 +1,7 @@
 package me.mervin.project.asRank.evolution;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,22 +25,23 @@ import me.mervin.util.Pair;
 */
 public class Betweenness {
 
-	private String srcFile = null;
+	private String srcDir = null;
 	private String dstFile = null;
 	private FileTool ft = new FileTool();
-	private Map<Number, Number> betweennessMap = new HashMap<Number, Number>();
+	private Map<Number, Number> nodeBetweennessMap = new HashMap<Number, Number>();
+	private Map<Pair<Number>, Number> edgeBetweennessMap = new HashMap<Pair<Number>, Number>();
 	
-	public Betweenness(String srcFile, String dstFile){
-		this.srcFile = srcFile;
+	public Betweenness(String srcDir, String dstFile){
+		this.srcDir = srcDir;
 		this.dstFile = dstFile;
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-//		String srcFile = "G:\\data\\201308-path.txt";
-		String srcFile = "G:\\data\\test.txt";
+//		String srcDir = "G:\\data\\201308-path.txt";
+		String srcDir = "G:\\data\\test.txt";
 		String dstFile = "G:\\data\\res.txt";
 //		String dstFile = "G:\\data\\201308-betweenness.txt";
-		Betweenness b = new Betweenness(srcFile, dstFile);
+		Betweenness b = new Betweenness(srcDir, dstFile);
 		b.script();
 	}
 	
@@ -48,46 +50,52 @@ public class Betweenness {
 		/*
 		 * 1,get the first column's node(AS) in the text
 		 */
-		Set<Number> firstNodeSet = this._getAllFirstNode();
-		
-		for(Number firstNode:firstNodeSet){
-			D.p("firstNode=>"+firstNode);
+
+		File[] fileArr = ft.fileArr(this.srcDir);
+		for (int i = 0; i < fileArr.length; i++) {
+			File file = fileArr[i];
+			D.p("firstNode=>"+file.getName());
 			/*
 			 * 2,get the path with the same first ndoe
 			 */
-			pathMap = this._getPathByFirtNode(firstNode.intValue());
+			pathMap = this._getPathByFirtNode(file);
 			for(HashSet<LinkedList<Integer>> pathSet:pathMap.values()){
 				
 				/*
-				 * 3, calculate the betweenness according the 
+				 * 3, calculate the node betweenness according the 
 				 */
-				this._calculateBetweenness(pathSet);
+				this._calculateNodeBetweenness(pathSet);
+				/*
+				 * 4, calculate the edge betweenness according the 
+				 */
+				this._calculateEdgeBetweenness(pathSet);
 			}
 		}
 		/*
-		 * write betweennessMap to the file 
+		 * write nodeBetweennessMap to the file 
 		 */
-		ft.write(betweennessMap, dstFile);
+		ft.write(nodeBetweennessMap, dstFile);
 	}
 	
 	/******************************************************************
 	 * 
 	 * private method
-	 * @return
+	 * @return Set<Number>
 	 */
 	
 	/*
 	 * 获取文本文件中第一列的节点ID
 	 */
-	private Set<Number> _getAllFirstNode(){
-		int[] col = {1};
-		return this.ft.read2Set(srcFile, NumberType.INTEGER, col);
+/*	private Set<Number> _getAllFirstNode(){
+		//int[] col = {1};
+		//return this.ft.read2Set(srcDir, NumberType.INTEGER, col);
 	}
-	
+*/	
 	/*
 	 * 获取第一个节点相同的路径
 	 */
-	private Map<Pair<Integer>, HashSet<LinkedList<Integer>>> _getPathByFirtNode(int firsNode){
+	@SuppressWarnings("resource")
+	private Map<Pair<Integer>, HashSet<LinkedList<Integer>>> _getPathByFirtNode(File file){
 		BufferedReader reader = null;
 		Map<Pair<Integer>, HashSet<LinkedList<Integer>>> pathMap = new HashMap<Pair<Integer>, HashSet<LinkedList<Integer>>>();
 		Pair<Integer> pair = null;
@@ -95,30 +103,29 @@ public class Betweenness {
 		LinkedList<Integer> path = null;
 		
 		try {
-			reader = new BufferedReader(new FileReader(this.srcFile));
+			reader = new BufferedReader(new FileReader(file));
 			String line = null;
-			String[] lineArr = null;
+			String[] lineArr 
+			= null;
 			while((line = reader.readLine())!= null){
 				lineArr = line.split("\\s+");
+			
+				int l = Integer.parseInt(lineArr[0]);
+				int r = 0;
+				path = new LinkedList<Integer>();
+				for(String str:lineArr){
+					r = Integer.parseInt(str);
+					path.add(r);
+				}//for
+				pair = new Pair<Integer>(l, r, false);
 				
-				if(lineArr[0].equals(firsNode+"")){
-					int l = Integer.parseInt(lineArr[0]);
-					int r = 0;
-					path = new LinkedList<Integer>();
-					for(String str:lineArr){
-						r = Integer.parseInt(str);
-						path.add(r);
-					}//for
-					pair = new Pair<Integer>(l, r, false);
-					
-					if(pathMap.containsKey(pair)){
-						pathMap.get(pair).add(path);
-					}else{
-						pathSet = new HashSet<LinkedList<Integer>>();
-						pathSet.add(path);
-						pathMap.put(pair, pathSet);
-					}
-				}//if
+				if(pathMap.containsKey(pair)){
+					pathMap.get(pair).add(path);
+				}else{
+					pathSet = new HashSet<LinkedList<Integer>>();
+					pathSet.add(path);
+					pathMap.put(pair, pathSet);
+				}
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -133,7 +140,7 @@ public class Betweenness {
 	/*
 	 * 计算节点介数
 	 */
-	private void _calculateBetweenness(HashSet<LinkedList<Integer>> pathSet) {
+	private void _calculateNodeBetweenness(HashSet<LinkedList<Integer>> pathSet) {
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		
 		for (LinkedList<Integer> ll : pathSet) {
@@ -153,13 +160,46 @@ public class Betweenness {
 		
 		for(int k:map.keySet()){
 			double v = 0;
-			if(this.betweennessMap.containsKey(k)){
-				v = this.betweennessMap.get(k).doubleValue()+(double)map.get(k)/pathSet.size();
+			if(this.nodeBetweennessMap.containsKey(k)){
+				v = this.nodeBetweennessMap.get(k).doubleValue()+(double)map.get(k)/pathSet.size();
 			}else{
 				v = (double)map.get(k)/pathSet.size();
 			}
-			this.betweennessMap.put(k, v);
+			this.nodeBetweennessMap.put(k, v);
 		}
 		
+	}
+	
+	
+	private void _calculateEdgeBetweenness(HashSet<LinkedList<Integer>> pathSet){
+		Map<Pair<Number>, Integer> map = new HashMap<Pair<Number>, Integer>();
+		Pair<Number> pair = null;
+		for (LinkedList<Integer> ll : pathSet) {
+			if(ll.size() > 1){
+				int l = ll.get(0);
+				int r = 0;
+				for (int i = 1; i < ll.size(); i++) {
+					r = ll.get(i);
+					pair = new Pair<Number>(l, r, false);
+					if(map.containsKey(pair)){
+						map.put(pair, map.get(pair)+1);
+					}else{
+						map.put(pair, 1);
+					}
+					
+				}
+			}
+		}//for
+		
+		
+		for(Pair<Number> p:map.keySet()){
+			double v = 0;
+			if(this.edgeBetweennessMap.containsKey(p)){
+				v = this.edgeBetweennessMap.get(p).doubleValue()+(double)map.get(p)/pathSet.size();
+			}else{
+				v = (double)map.get(p)/pathSet.size();
+			}
+			this.edgeBetweennessMap.put(p, v);
+		}
 	}
 }
