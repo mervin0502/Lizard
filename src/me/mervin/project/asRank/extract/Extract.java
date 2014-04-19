@@ -27,7 +27,7 @@ public class Extract {
 		String srcFile = null;
 		String dstFile = null;
 		int[] years = {2013};
-		int[] months = {8, 9 , 10};
+		int[] months = {7, 6};
 
 		ExecutorService pools = null;
 		File[] fileArr1 = null, fileArr2 = null;
@@ -50,7 +50,7 @@ public class Extract {
 				 * 1, extract all the path
 				 */
 
-		/*		dstDir = "/media/data/data/res/";
+				dstDir = "/media/data/data/res/";
 				//pools = Executors.newFixedThreadPool(2);
 				
 				
@@ -85,7 +85,7 @@ public class Extract {
 						}
 					}//for fileArr2
 				}//for fileArr1
-			*/
+			
 				// * 2, combine the file by date
 				 
 				srcDir = "/media/data/data/res/";
