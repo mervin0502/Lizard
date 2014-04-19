@@ -49,10 +49,9 @@ public class Extract {
 				/*
 				 * 1, extract all the path
 				 */
-
+				srcDir = "/media/data/data/src/";
 				dstDir = "/media/data/data/res/";
 				//pools = Executors.newFixedThreadPool(2);
-				
 				
 				fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
 				for (int j = 0; j < fileArr1.length; j++) {
@@ -60,7 +59,9 @@ public class Extract {
 					name1 = fileArr1[j].getName();
 					for (int i = 0; i < fileArr2.length; i++) {
 						name2 = fileArr2[i].getName();
+						//D.p(fileArr2[i].getAbsolutePath());
 						if(name2.contains("bz2")){
+							
 							//route-view data package compress format
 							name2 = name2.substring(0, name2.length()-4);
 							logFile = dstDir+y+"/"+date+"/"+"log.txt";
@@ -72,6 +73,7 @@ public class Extract {
 								D.p("File Exist:"+dstDir+y+"/"+date+"/"+name1+"/"+name2+"-path.txt");
 							}
 						}else if(name2.contains("gz")){
+							
 							// RIPE data package compress format
 							name2 = name2.substring(0, name2.length()-3);
 							logFile = dstDir+y+"/"+date+"/"+"log.txt";
