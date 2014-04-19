@@ -145,6 +145,11 @@ public class ThreadPoolManager {
 			}
 	
 		}*/
+		
+		for(ThreadPoolWorker w:workerList){
+			w.stopWorker();
+			w = null;
+		}
 		this.status = Status.TERMINATED;
 		
 		workerList.clear();
