@@ -44,6 +44,8 @@ public class ThreadPoolManager {
 	 * the task queue(FIFO)
 	 */
 	private List<Task> taskQueue = Collections.synchronizedList(new LinkedList<Task>());
+	
+	protected Boolean isStop = new Boolean(false);
 	 /**
 	 */
 	public ThreadPoolManager() {
@@ -67,7 +69,7 @@ public class ThreadPoolManager {
 		}//if
 */		ThreadPoolWorker t = null;
 		for(int i = 0; i < ThreadPoolManager.TRHEAD_COUNT; i++){
-			t = new ThreadPoolWorker(this, i);
+			t = new ThreadPoolWorker(this, i+1);
 			this.workerList.add(t);
 		}
 	}
@@ -83,24 +85,6 @@ public class ThreadPoolManager {
 	 * start the thread pool
 	 */
 	public synchronized void start(){
-/*		if(ThreadPoolManager.TRHEAD_COUNT == 0 || !this.status.equals(Status.NEW)){
-			try{
-				throw new Exception();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return;
-		}//if
-		
-		if(this.taskQueue == null){
-			try{
-				throw new Exception();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return;
-		}//if
-*/		
 		
 		// create the thread
 		for(Thread t:workerList){
@@ -112,36 +96,60 @@ public class ThreadPoolManager {
 	/**
 	 * close the thread pool
 	 */
-	public synchronized void stop(){
-/*		if(ThreadPoolManager.TRHEAD_COUNT == 0 || !this.status.equals(Status.NEW)){
-			try{
-				throw new Exception();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return;
-		}//if
+	public  void stop(){
 		
-		if(this.taskQueue == null){
-			try{
-				throw new Exception();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return;
-		}//if
-*/		
-		while(taskQueue.isEmpty()){
-			for(ThreadPoolWorker w:workerList){
-				if(w.isWaiting()){
-					w.stopWorker();
-					
+	/*	if(!this.taskQueue.isEmpty()){
+			synchronized (this.isStop) {
+				try {
+					this.isStop.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
+		
+		for(ThreadPoolWorker w:workerList){
+			if(w.isRunning() && !w.isWaiting()){
+				synchronized (this.isStop) {
+					try {
+						this.isStop.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}else{
+				w.stopWorker();
+			}
+		}*/
+		
+		/*
+		boolean flag ;
+		while(true){
+			if(taskQueue.isEmpty()){
+				do{
+					flag = true;
+					for(ThreadPoolWorker w:workerList){
+						D.p(w.getId()+"###"+w.isRunning()+"####"+w.isWaiting());
+						if(w.isRunning()){
+							if(w.isWaiting()){
+								w.stopWorker();
+							}else{
+								flag = false;
+							}
+						}
+					}
+				}while(!flag);
+				break;
+			}
+	
+		}*/
 		this.status = Status.TERMINATED;
+		
 		workerList.clear();
 		taskQueue.clear();
+		
 		//extend the parent class, interrupt all the threads in  ThreadGroup
 		//interrupt();
 	}
@@ -157,41 +165,28 @@ public class ThreadPoolManager {
 	 *  @param task
 	 */
 	public  void addTask(Task task){
-/*		if(this.taskQueue == null){
-			try{
-				throw new Exception();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return;
-		}//if
-*/		synchronized(this.taskQueue){
+		synchronized(this.taskQueue){
 			task.setId(++taskCounter);
 			taskQueue.add(task);
 			//wake the taskQueue
+			D.p("notify");
 			taskQueue.notifyAll();
 		}
 	}
 	
 	public  Task getTask(){
-/*		if(this.taskQueue == null){
-			try{
-				throw new Exception();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return null;
-		}//if
-*/		
 		synchronized(this.taskQueue){
 			while(taskQueue.isEmpty()){
 				try{
+					D.p("wait");
 					taskQueue.wait();
 				}catch (InterruptedException e){
 					e.printStackTrace();
 				}
 			}//while
-			
+			if(this.status.equals(Status.TERMINATED)){
+				return null;
+			}
 			return taskQueue.remove(0);
 		}
 	}

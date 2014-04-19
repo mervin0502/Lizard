@@ -310,5 +310,8 @@ public class Index {
 		if(l.equals(l1)){
 			D.m("@");
 		}
+		while(true){
+			
+		}
 	}
 }

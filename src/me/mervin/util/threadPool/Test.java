@@ -22,7 +22,7 @@ public class Test {
 		ThreadPoolManager m = new ThreadPoolManager("simple thread pool");
 		m.start();
 		Task t = null;
-		for(int i = 0; i < 20; i++){
+		for(int i = 0; i < 5; i++){
 			t = new TestTask(i);
 			m.addTask(t);
 		}
@@ -33,12 +33,24 @@ public class Test {
 class TestTask extends Task{
 	private int i = 0;
 	
-	public TestTask(int i){
-		super(i);
-		this.i = i;
+	public TestTask(int taskId){
+		super(taskId);
+		this.i = taskId;
 	}
 	public void run(){
-		D.p("Hello world"+i);
+		D.p(i+">>Hello world"+getId());
+	/*	try {
+			if(i % 2 == 0){
+				Thread.sleep(1000);
+			}else{
+				Thread.sleep(1000);
+			}
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		D.p(i+"<<Hello world"+i);
 //		D.p(i);
 	}
 }

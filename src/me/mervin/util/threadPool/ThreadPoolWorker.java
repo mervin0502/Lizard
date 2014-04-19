@@ -1,5 +1,7 @@
 package me.mervin.util.threadPool;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import me.mervin.util.D;
 
 
@@ -19,6 +21,7 @@ public class ThreadPoolWorker extends Thread {
 	private boolean isWaiting = true;
 	//this thread belong to the thread pool
 	private ThreadPoolManager manager = null;
+	
 	/**
 	 */
 	public ThreadPoolWorker() {
@@ -44,6 +47,9 @@ public class ThreadPoolWorker extends Thread {
 	public void stopWorker(){
 		this.isRunning = false;
 	}
+	public boolean isRunning(){
+		return this.isRunning;
+	}
 	public boolean isWaiting(){
 		return this.isWaiting;
 	}
@@ -51,17 +57,21 @@ public class ThreadPoolWorker extends Thread {
 	 * 
 	 */
 	public void run(){
-		while(this.isRunning && !isInterrupted()){
+		while(this.isRunning){
 			Task runTask = manager.getTask();
 			
 			if(runTask == null){
 				break;
 			}
-			
 			this.isWaiting = false;
 			runTask.run();
 			this.isWaiting = true;
+			synchronized (manager.isStop) {
+				manager.isStop.notify();
+			}
+			D.m(getName()+"####"+runTask.getId());
 		}//while
+		D.p("exit");
 	}
 
 }
