@@ -224,8 +224,8 @@ public class ASPath extends Thread{
 	private void _unzip(){
 		String srcFile = this.srcDir+name2+"."+this.ext;
 		String dstFile = this.dstDir+this.name2;
-		String cmd2 = "/home/mervin/tools/libbgpdump-dev/bgpdump -v -O"+dstFile+" "+srcFile;
-		//String cmd2 = "/home/mervin/libbgpdump/bgpdump -v -O"+dstFile+" "+srcFile;
+		//String cmd2 = "/home/mervin/tools/libbgpdump-dev/bgpdump -v -O"+dstFile+" "+srcFile;
+		String cmd2 = "/home/mervin/libbgpdump/bgpdump -v -O"+dstFile+" "+srcFile;
 		//D.p(cmd2);
 		try {
 			this.ft.write(this.df.format(new Date())+"\t Bgpdump:"+srcFile+"\r\n", logFile, true);
