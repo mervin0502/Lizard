@@ -26,7 +26,7 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 	 */
 	public static final int MAX_CAPACITY = 20;
 	
-	public Map.Entry<K, V> eldest = null;
+	public Map.Entry<K, V> eldestItem = null;
 	/*
 	 * have cached number currently 
 	 */
@@ -99,10 +99,10 @@ public class LRU<K, V> extends LinkedHashMap<K, V>{
 	 */
 	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 		if(size() > this.capacity){
-			this.eldest = eldest;
+			this.eldestItem = eldest;
 			return true;
 		}else{
-			this.eldest = null;
+			this.eldestItem = null;
 			return false;
 		}
 	}

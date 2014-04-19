@@ -27,7 +27,7 @@ public class Extract {
 		String srcFile = null;
 		String dstFile = null;
 		int[] years = {2013};
-		int[] months = {11};
+		int[] months = {8, 9 , 10};
 
 		ExecutorService pools = null;
 		File[] fileArr1 = null, fileArr2 = null;
@@ -49,8 +49,8 @@ public class Extract {
 				/*
 				 * 1, extract all the path
 				 */
-/*				srcDir = "/media/data/data/src/";
-				dstDir = "/media/data/data/res/";
+
+		/*		dstDir = "/media/data/data/res/";
 				//pools = Executors.newFixedThreadPool(2);
 				
 				
@@ -85,7 +85,7 @@ public class Extract {
 						}
 					}//for fileArr2
 				}//for fileArr1
-*/				
+			*/
 				// * 2, combine the file by date
 				 
 				srcDir = "/media/data/data/res/";
@@ -113,13 +113,13 @@ public class Extract {
 				//CombFileByAS o = null;
 				File f = null;
 				fileArr1 = ft.fileArr(srcDir+y+"/"+date+"/");
-				//ft.clear(dstDir);
+				ft.clear(dstDir);
 				for (int i = 0; i < fileArr1.length; i++) {
 					f = fileArr1[i];
 					if(f.isDirectory()){
 						D.p("split file by AS=>"+f.getAbsolutePath()+"/"+date+".txt");
-						//t = new SplitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
-						//t.run();
+						t = new SplitFileByAS(dstDir, f.getAbsolutePath()+"/"+date+".txt");
+						t.run();
 						//pools.execute(t);
 					}//if
 				}//for i

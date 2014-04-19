@@ -40,7 +40,7 @@ public class SplitFileByAS extends Thread{
 	private String srcFile = null;
 	private String dstFile = null;
 	
-	private static LRU<Integer, RandomAccessFile> fileCacheLru = new LRU(50);
+	private static LRU<Integer, RandomAccessFile> fileCacheLru = new LRU(60);
 	public SplitFileByAS(){
 		
 	}
@@ -75,8 +75,8 @@ public class SplitFileByAS extends Thread{
 				}else{
 					write = new RandomAccessFile(new File(dstFile), "rw");
 					SplitFileByAS.fileCacheLru.put(key, write);
-					if(SplitFileByAS.fileCacheLru.eldest != null){
-						SplitFileByAS.fileCacheLru.eldest.getValue().close();
+					if(SplitFileByAS.fileCacheLru.eldestItem != null){
+						SplitFileByAS.fileCacheLru.eldestItem.getValue().close();
 					}
 					long size = write.length();
 					write.seek(size);
