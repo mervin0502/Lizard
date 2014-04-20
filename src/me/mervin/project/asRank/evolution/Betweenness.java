@@ -26,23 +26,44 @@ import me.mervin.util.Pair;
 public class Betweenness {
 
 	private String srcDir = null;
-	private String dstFile = null;
+	private String dstDir = null;
+	private String prefix = null;
 	private FileTool ft = new FileTool();
 	private Map<Number, Number> nodeBetweennessMap = new HashMap<Number, Number>();
 	private Map<Pair<Number>, Number> edgeBetweennessMap = new HashMap<Pair<Number>, Number>();
 	
-	public Betweenness(String srcDir, String dstFile){
+	public Betweenness(String srcDir, String dstDir, String prefix){
 		this.srcDir = srcDir;
-		this.dstFile = dstFile;
+		this.dstDir = dstDir;
+		this.prefix = prefix;
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-//		String srcDir = "G:\\data\\201308-path.txt";
+/*//		String srcDir = "G:\\data\\201308-path.txt";
 		String srcDir = "G:\\data\\test.txt";
-		String dstFile = "G:\\data\\res.txt";
-//		String dstFile = "G:\\data\\201308-betweenness.txt";
-		Betweenness b = new Betweenness(srcDir, dstFile);
-		b.script();
+		String dstDir = "G:\\data\\res.txt";
+//		String dstDir = "G:\\data\\201308-betweenness.txt";
+		Betweenness b = new Betweenness(srcDir, dstDir);
+		b.script();*/
+		
+		String srcDir = "/media/data/data/path/";
+		String dstDir = "/media/data/data/rank/";
+		FileTool ft = new FileTool();
+		File[] fileArr1 = ft.fileArr(srcDir);
+		File[] fileArr2 = null;
+		Betweenness b = null;
+		for (int i = 0; i < fileArr1.length; i++) {
+			fileArr2 = fileArr1[i].listFiles();
+			for (int j = 0; j < fileArr2.length; j++) {
+				D.p("current file:"+fileArr2[j].getAbsolutePath());
+				b = new Betweenness(fileArr2[j].getAbsolutePath(), dstDir+fileArr1[i].getName()+"/", fileArr2[j].getName());
+				b.script();
+			}
+			
+		}
+		
+		
+		
 	}
 	
 	public void script(){
@@ -54,7 +75,7 @@ public class Betweenness {
 		File[] fileArr = ft.fileArr(this.srcDir);
 		for (int i = 0; i < fileArr.length; i++) {
 			File file = fileArr[i];
-			D.p("firstNode=>"+file.getName());
+			//D.p("firstNode=>"+file.getName());
 			/*
 			 * 2,get the path with the same first ndoe
 			 */
@@ -71,10 +92,18 @@ public class Betweenness {
 				this._calculateEdgeBetweenness(pathSet);
 			}
 		}
+		String dstFile = null;
 		/*
 		 * write nodeBetweennessMap to the file 
 		 */
+		dstFile = this.dstDir+this.prefix+"-node.txt";
 		ft.write(nodeBetweennessMap, dstFile);
+		dstFile = this.dstDir+this.prefix+"-edge.txt";
+		StringBuffer sb = new StringBuffer();
+		for(Pair<Number> p:this.edgeBetweennessMap.keySet()){
+			sb.append(p.getL()).append("\t").append(p.getR()).append("\t").append(this.edgeBetweennessMap.get(p)).append("\r\n");
+		}
+		ft.write(sb, dstFile);
 	}
 	
 	/******************************************************************
@@ -170,7 +199,9 @@ public class Betweenness {
 		
 	}
 	
-	
+	/*
+	 * edge betweenness
+	 */
 	private void _calculateEdgeBetweenness(HashSet<LinkedList<Integer>> pathSet){
 		Map<Pair<Number>, Integer> map = new HashMap<Pair<Number>, Integer>();
 		Pair<Number> pair = null;

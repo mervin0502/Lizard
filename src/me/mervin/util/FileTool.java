@@ -349,7 +349,7 @@ public class FileTool {
 		// TODO Auto-generated method stub
 		this.dstFile = dstFile;
 		File f = new File(dstFile);
-		if(!(f.getParentFile().isDirectory())){
+		if(!(f.getParentFile().exists())){
 			f.getParentFile().mkdirs();
 		}
 		try {
