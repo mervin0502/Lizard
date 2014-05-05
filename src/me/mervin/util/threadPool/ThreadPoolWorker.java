@@ -66,12 +66,12 @@ public class ThreadPoolWorker extends Thread {
 			this.isWaiting = false;
 			runTask.run();
 			this.isWaiting = true;
+			D.m(getName()+"####"+runTask.getId());
 			synchronized (manager.isStop) {
 				manager.isStop.notify();
 			}
-			D.m(getName()+"####"+runTask.getId());
 		}//while
-		D.p("exit");
+		//D.p("exit");
 	}
 
 }

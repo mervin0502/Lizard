@@ -1,6 +1,8 @@
 package me.mervin.project.usr;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ import me.mervin.module.extract.EdgeDeweigh;
 import me.mervin.module.feature.ClusterCofficient;
 import me.mervin.module.feature.Coreness;
 import me.mervin.module.feature.Degree;
+import me.mervin.module.feature.StructEntropy;
 import me.mervin.module.graphFormats.GraphML;
 import me.mervin.module.graphFormats.GraphMLReader;
 import me.mervin.util.D;
@@ -295,7 +298,7 @@ public class Index {
 			D.p(l);
 		}*/
 		
-		LinkedList<Integer> l = new LinkedList<Integer>();
+/*		LinkedList<Integer> l = new LinkedList<Integer>();
 		l.add(1);
 		l.add(3000);
 		l.add(30000);
@@ -312,6 +315,35 @@ public class Index {
 		}
 		while(true){
 			
+		}*/
+		/*String srcFile = "./data/soft.txt";
+		String dstFile = "";
+		Network net = new Network(srcFile, NetType.DIRECTED, NumberType.INTEGER);
+		Degree degree = new Degree(net);
+		FileTool ft = new FileTool();
+		dstFile = "./data/soft_degreeDistRatio.txt";
+		ft.write(degree.netDegreeDistributionRatio(), dstFile);
+		dstFile = "./data/soft_degreeInDistRatio.txt";
+		ft.write(degree.netInDegreeDistributionRatio(), dstFile);
+		dstFile = "./data/soft_degreeOutDistRatio.txt";
+		ft.write(degree.netOutDegreeDistributionRatio(), dstFile);*/
+		String srcDir = "./data/as/";
+		FileTool ft = new FileTool();
+		File[] fileArr = ft.fileArr(srcDir);
+		StructEntropy se = new StructEntropy();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < fileArr.length; i++) {
+			D.p(fileArr[i].getAbsoluteFile());
+			String name = fileArr[i].getName();
+			String prefix = name.substring(0, name.indexOf("."));
+			Network net = new Network(fileArr[i].getAbsolutePath(), NetType.UNDIRECTED, NumberType.LONG);
+			sb.append(prefix).append("\t").append(se.script(net, false)).append("\r\n");
+			D.p(sb.toString());
 		}
-	}
+		new FileTool().write(sb, "./data/struct_entropy.txt");
+		
+		
+		
+		
+		}
 }

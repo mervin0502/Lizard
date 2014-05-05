@@ -1,5 +1,7 @@
 package me.mervin.util.threadPool;
 
+import java.util.Random;
+
 import me.mervin.util.D;
 
 
@@ -22,11 +24,28 @@ public class Test {
 		ThreadPoolManager m = new ThreadPoolManager("simple thread pool");
 		m.start();
 		Task t = null;
-		for(int i = 0; i < 5; i++){
+		for(int i = 1; i < 35; i++){
 			t = new TestTask(i);
 			m.addTask(t);
 		}
-		m.stop();
+		if(m.isFinish()){
+			D.m("isFinish");
+			try {
+				Thread.sleep(30000);
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for(int i = 100; i < 350; i++){
+				t = new TestTask(i);
+				m.addTask(t);
+			}
+			m.stop();
+		}
+		//m.stop();
+		
+		//D.m();
 	}
 }
 
@@ -39,18 +58,14 @@ class TestTask extends Task{
 	}
 	public void run(){
 		D.p(i+">>Hello world"+getId());
-	/*	try {
-			if(i % 2 == 0){
-				Thread.sleep(1000);
-			}else{
-				Thread.sleep(1000);
-			}
+		try {
+			Thread.sleep((int)Math.random()*2000);
 			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
-		D.p(i+"<<Hello world"+i);
+		}
+		//D.p(i+"<<Hello world"+i);
 //		D.p(i);
 	}
 }

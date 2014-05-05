@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import me.mervin.util.D;
 
@@ -20,7 +22,7 @@ public class ThreadPoolManager {
 	/**
 	 * the thread number in the pool
 	 */
-	public static final int TRHEAD_COUNT=2;
+	public static final int TRHEAD_COUNT=5;
 	
 	public enum Status{
 		NEW, RUNNING, TERMINATED
@@ -31,6 +33,10 @@ public class ThreadPoolManager {
 	public List<ThreadPoolWorker> workerList = new ArrayList<ThreadPoolWorker>();
 	
 	private static ThreadPoolManager instance = ThreadPoolManager.getInstance();
+	/*
+	 * the thread pool size
+	 */
+	private int threadPoolSize = this.TRHEAD_COUNT;
 	/*
 	 * the task number finished
 	 */
@@ -46,10 +52,13 @@ public class ThreadPoolManager {
 	private List<Task> taskQueue = Collections.synchronizedList(new LinkedList<Task>());
 	
 	protected Boolean isStop = new Boolean(false);
+	
+	protected Lock lock = new ReentrantLock();
 	 /**
 	 */
 	public ThreadPoolManager() {
 		// TODO 自动生成的构造函数存根
+		this._init();
 	}	
 	/**
 	 * @param name
@@ -67,13 +76,16 @@ public class ThreadPoolManager {
 			}
 			return;
 		}//if
-*/		ThreadPoolWorker t = null;
+*/		this._init();
+	}
+	
+	private void _init(){
+		ThreadPoolWorker t = null;
 		for(int i = 0; i < ThreadPoolManager.TRHEAD_COUNT; i++){
 			t = new ThreadPoolWorker(this, i+1);
 			this.workerList.add(t);
 		}
 	}
-	
 
 	public static synchronized ThreadPoolManager getInstance(){
 		if(ThreadPoolManager.instance == null){
@@ -90,6 +102,7 @@ public class ThreadPoolManager {
 		for(Thread t:workerList){
 			t.start();
 		}
+
 		this.status = Status.RUNNING;
 	}
 	
@@ -98,19 +111,38 @@ public class ThreadPoolManager {
 	 */
 	public  void stop(){
 		
-	/*	if(!this.taskQueue.isEmpty()){
-			synchronized (this.isStop) {
-				try {
-					this.isStop.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		boolean flag ;
+		while(true){
+			if(taskQueue.isEmpty()){
+				do{
+					flag = true;
+					for(ThreadPoolWorker w:workerList){
+						//D.p(w.getId()+"###"+w.isRunning()+"####"+w.isWaiting());
+						if(w.isRunning()){
+							if(w.isWaiting()){
+								w.stopWorker();
+							}else{
+								synchronized (this.isStop) {
+									try {
+										this.isStop.wait();
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+								flag = false;
+							}
+						}						
+						//D.p("@"+w.getId()+"###"+w.isRunning()+"####"+w.isWaiting());
+					}
+				}while(!flag);
+				synchronized (this.taskQueue) {
+					this.status = Status.TERMINATED;
+					this.taskQueue.notifyAll();
+					//D.p("stop"+this.status);
 				}
-			}
-		}
-		
-		for(ThreadPoolWorker w:workerList){
-			if(w.isRunning() && !w.isWaiting()){
+				break;
+			}else{
 				synchronized (this.isStop) {
 					try {
 						this.isStop.wait();
@@ -119,38 +151,9 @@ public class ThreadPoolManager {
 						e.printStackTrace();
 					}
 				}
-			}else{
-				w.stopWorker();
-			}
-		}*/
-		
-		/*
-		boolean flag ;
-		while(true){
-			if(taskQueue.isEmpty()){
-				do{
-					flag = true;
-					for(ThreadPoolWorker w:workerList){
-						D.p(w.getId()+"###"+w.isRunning()+"####"+w.isWaiting());
-						if(w.isRunning()){
-							if(w.isWaiting()){
-								w.stopWorker();
-							}else{
-								flag = false;
-							}
-						}
-					}
-				}while(!flag);
-				break;
 			}
 	
-		}*/
-		
-		for(ThreadPoolWorker w:workerList){
-			w.stopWorker();
-			w = null;
-		}
-		this.status = Status.TERMINATED;
+		}		
 		
 		workerList.clear();
 		taskQueue.clear();
@@ -165,6 +168,55 @@ public class ThreadPoolManager {
 		return status == Status.RUNNING;
 	}
 	/**
+	 * current tasks is finished ?
+	 * @return  boolean
+	 */
+	public boolean  isFinish(){
+		boolean flag ;
+		while(true){
+			if(taskQueue.isEmpty()){
+				do{
+					flag = true;
+					for(ThreadPoolWorker w:workerList){
+						//D.p(w.getId()+"###"+w.isRunning()+"####"+w.isWaiting());
+						if(!w.isWaiting()){
+							flag = false;
+							synchronized (this.isStop) {
+								try {
+									this.isStop.wait();
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}				
+						//D.p("@"+w.getId()+"###"+w.isRunning()+"####"+w.isWaiting());
+					}
+				}while(!flag);
+				return true;
+			}else{
+				synchronized (this.isStop) {
+					try {
+						this.isStop.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+	
+		}	
+	}
+	
+	/**
+	 * set the thread pool size
+	 * @param n
+	 */
+	public void setThreadPoolSize(int n){
+		if(this.status.equals(Status.NEW)){
+		}
+	}
+	/**
 	 * add a task
 	 *  
 	 *  @param task
@@ -174,7 +226,7 @@ public class ThreadPoolManager {
 			task.setId(++taskCounter);
 			taskQueue.add(task);
 			//wake the taskQueue
-			D.p("notify");
+			//D.p("notify");
 			taskQueue.notifyAll();
 		}
 	}
@@ -183,15 +235,17 @@ public class ThreadPoolManager {
 		synchronized(this.taskQueue){
 			while(taskQueue.isEmpty()){
 				try{
-					D.p("wait");
+					//D.p("status:"+this.status);
+					if(this.status.equals(Status.TERMINATED)){
+						//D.m("terminated");
+						return null;
+					}
+					//D.p("wait");
 					taskQueue.wait();
 				}catch (InterruptedException e){
 					e.printStackTrace();
 				}
 			}//while
-			if(this.status.equals(Status.TERMINATED)){
-				return null;
-			}
 			return taskQueue.remove(0);
 		}
 	}

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 
 import me.mervin.util.D;
@@ -19,7 +20,7 @@ import me.mervin.util.D;
 public class Ip2Id {
 	
 	public static void main(String args[]){
-		String souPath = "E:\\Code\\java\\ipp\\";
+	/*	String souPath = "E:\\Code\\java\\ipp\\";
 		String desPath = "E:\\Code\\java\\ipp\\";
 		int curIndex = 1;
 		HashMap<Number, Integer> nodesIdSet = new HashMap<Number, Integer>();
@@ -71,8 +72,10 @@ public class Ip2Id {
 				e.printStackTrace();
 			}
 			
-		}
-	
+		}*/
+		BigInteger bi1 = new BigInteger("1000000000000000000000000000000000000000000");
+		BigInteger bi2 = new BigInteger("2000000000000000000000000000000000000000000");
+		D.p(bi1.add(bi2));
 		
 	}
 }
