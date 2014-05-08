@@ -35,7 +35,7 @@ import me.mervin.module.extract.EdgeDeweigh;
 import me.mervin.module.feature.ClusterCofficient;
 import me.mervin.module.feature.Coreness;
 import me.mervin.module.feature.Degree;
-import me.mervin.module.feature.StructEntropy;
+import me.mervin.module.feature.StructureEntropy;
 import me.mervin.module.graphFormats.GraphML;
 import me.mervin.module.graphFormats.GraphMLReader;
 import me.mervin.util.D;
@@ -329,21 +329,18 @@ public class Index {
 		ft.write(degree.netOutDegreeDistributionRatio(), dstFile);*/
 		String srcDir = "./data/as/";
 		FileTool ft = new FileTool();
+		//File[] fileArr = ft.fileArr(srcDir, "20070701");
 		File[] fileArr = ft.fileArr(srcDir);
-		StructEntropy se = new StructEntropy();
+		StructureEntropy se = new StructureEntropy();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < fileArr.length; i++) {
 			D.p(fileArr[i].getAbsoluteFile());
 			String name = fileArr[i].getName();
 			String prefix = name.substring(0, name.indexOf("."));
 			Network net = new Network(fileArr[i].getAbsolutePath(), NetType.UNDIRECTED, NumberType.LONG);
-			sb.append(prefix).append("\t").append(se.script(net, false)).append("\r\n");
-			D.p(sb.toString());
+			sb.append(prefix).append("\t").append(se.script(net, true)).append("\r\n");
+//			D.p(sb.toString());
 		}
-		new FileTool().write(sb, "./data/struct_entropy.txt");
-		
-		
-		
-		
-		}
+		new FileTool().write(sb, "./data/struct_entropy_normalized.txt");
+	}
 }
