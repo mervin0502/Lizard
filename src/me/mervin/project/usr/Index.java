@@ -329,6 +329,7 @@ public class Index {
 		ft.write(degree.netOutDegreeDistributionRatio(), dstFile);*/
 		String srcDir = "./data/as/";
 		FileTool ft = new FileTool();
+		//File[] fileArr = ft.fileArr(srcDir, "20070701");
 		File[] fileArr = ft.fileArr(srcDir);
 		StructEntropy se = new StructEntropy();
 		StringBuffer sb = new StringBuffer();
@@ -337,13 +338,9 @@ public class Index {
 			String name = fileArr[i].getName();
 			String prefix = name.substring(0, name.indexOf("."));
 			Network net = new Network(fileArr[i].getAbsolutePath(), NetType.UNDIRECTED, NumberType.LONG);
-			sb.append(prefix).append("\t").append(se.script(net, false)).append("\r\n");
-			D.p(sb.toString());
+			sb.append(prefix).append("\t").append(se.script(net, true)).append("\r\n");
+//			D.p(sb.toString());
 		}
-		new FileTool().write(sb, "./data/struct_entropy.txt");
-		
-		
-		
-		
-		}
+		new FileTool().write(sb, "./data/struct_entropy_normalized.txt");
+	}
 }
