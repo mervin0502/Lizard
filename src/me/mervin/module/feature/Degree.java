@@ -333,7 +333,7 @@ public class Degree{
 	 *  @param des true:由大到小；false:由小到大
 	 *  @return Set<Number>
 	 */
-	public Set<Number> getNodeIdByRatio(float ratio, boolean des){
+	public Set<Number> getNodeIdByRatio(double ratio, boolean des){
 		return this.getNodeIdByRatio(net, ratio, des);
 	}
 	/**
@@ -344,7 +344,7 @@ public class Degree{
 	 *  @param des true:由大到小；false:由小到大
 	 *  @return Set<Number>
 	 */
-	public Set<Number> getNodeIdByRatio(Network net, float ratio, final boolean des){
+	public Set<Number> getNodeIdByRatio(Network net, double ratio, final boolean des){
 		Set<Number> nodeIdSet = new HashSet<Number>();//获取的节点集
 		//网络节点与对应的度值
 		SortedMap<Number, Number> sortedMap = new TreeMap<Number, Number>();
@@ -559,7 +559,7 @@ public class Degree{
 	/**
 	 *  
 	 *  网络的度分布率
-	 * @return HashMap<Integer,Float> 
+	 * @return HashMap<Integer,double> 
 	 */
 	public Map<Number, Number> netDegreeDistributionRatio(){
 		Map<Number, Number> degreeMap = this.netDegreeDistribution();
@@ -570,7 +570,7 @@ public class Degree{
 	 *  
 	 *  网络的度分布率
 	 * @param net
-	 * @return HashMap<Integer,Float> 
+	 * @return HashMap<Integer,double> 
 	 */
 	public Map<Number, Number> netDegreeDistributionRatio(Network net){
 		Map<Number, Number> degreeMap = this.netDegreeDistribution(net);
@@ -614,9 +614,9 @@ public class Degree{
 	/**
 	 *  netDegreeAvg
 	 *  网络度的平均值
-	 * @return float
+	 * @return double
 	 */
-	public float netDegreeAvg(){
+	public double netDegreeAvg(){
 		Map<Number, Number> degreeMap = this.netDegreeDistribution();
 		return MathTool.average(degreeMap);
 	}
@@ -625,9 +625,9 @@ public class Degree{
 	 *  
 	 *  网络度的平均值
 	 * @param net
-	 * @return float
+	 * @return double
 	 */
-	public float netDegreeAvg(Network net){
+	public double netDegreeAvg(Network net){
 		Map<Number, Number> degreeMap = this.netDegreeDistribution(net);
 		return MathTool.average(degreeMap);
 	}
