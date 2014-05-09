@@ -135,7 +135,17 @@ public class Test {
 		new FileTool().write(d.netDegreeDistributionRatio(), "../data/AS-2009-2012/pfp.txt");*/
 		
 		//Network net = new Network("../data/test/2014.txt", NetType.UNDIRECTED, NumberType.INTEGER);
-/*		Network net = new Network("../data/test/karate.txt", NetType.UNDIRECTED, NumberType.INTEGER);
+		Network net = new Network("../data/test/karate.txt", NetType.UNDIRECTED, NumberType.INTEGER);
+		LinkPrediction lp2 = new CN(net);
+		lp2.script();
+		try {
+			lp2.auc();
+		} catch (E e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
 		//Network net = new Network("../data/test/power.txt", NetType.UNDIRECTED, NumberType.INTEGER);
 		try {
 			//LinkPrediction lp = new CN(net, 6);
@@ -147,17 +157,17 @@ public class Test {
 			//D.p(lp.aucAvg());
 			
 			D.p(lp.precisionAvg());
-			LinkPrediction lp2 = new CN(net);
+//			LinkPrediction lp2 = new CN(net);
 			D.p(lp2.precisionAvg());
-			AUC auc = new AUC(lp.run(), lp.probeEdgeSet(), 10);
-			D.p(auc.run());
+			AUC auc = new AUC(lp.script(), lp.probeEdgeSet(), 10);
+			D.p(auc.script());
 			
-			Precision p = new Precision(lp.run(), lp.probeEdgeSet(), 20);
-			D.p(p.run());
+			Precision p = new Precision(lp.script(), lp.probeEdgeSet(), 20);
+			D.p(p.script());
 		} catch (E e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		
 		
 /*		Pair<Integer> p = null;

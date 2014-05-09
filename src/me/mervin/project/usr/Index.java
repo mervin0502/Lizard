@@ -327,7 +327,10 @@ public class Index {
 		ft.write(degree.netInDegreeDistributionRatio(), dstFile);
 		dstFile = "./data/soft_degreeOutDistRatio.txt";
 		ft.write(degree.netOutDegreeDistributionRatio(), dstFile);*/
-		/*String srcDir = "./data/as/";
+		
+		
+		
+		String srcDir = "./data/as/";
 		FileTool ft = new FileTool();
 		//File[] fileArr = ft.fileArr(srcDir, "20070701");
 		File[] fileArr = ft.fileArr(srcDir);
@@ -338,16 +341,21 @@ public class Index {
 			String name = fileArr[i].getName();
 			String prefix = name.substring(0, name.indexOf("."));
 			Network net = new Network(fileArr[i].getAbsolutePath(), NetType.UNDIRECTED, NumberType.LONG);
-			sb.append(prefix).append("\t").append(se.script(net, true)).append("\r\n");
-//			D.p(sb.toString());
+			//false:结构熵，true:标准结构熵
+			sb.append(prefix).append("\t").append(se.script(net, false)).append("\r\n");
 		}
-		new FileTool().write(sb, "./data/struct_entropy_normalized.txt");*/
-		String srcFile = "./data/t2.txt";
+		new FileTool().write(sb, "./data/struct_entropy_vMax-v.txt");
+		
+		
+		
+		
+		
+/*		String srcFile = "./data/t2.txt";
 		Network net = new Network(srcFile, NetType.UNDIRECTED, NumberType.INTEGER);
 		D.p(net.isConnectedNet());
 		Degree d = new Degree(net);
 		D.p(d.netDegreeAvg());
 		D.p(net.edgeNum);
-		new FileTool().write(net.traverseEdge(), "./data/t3.txt");
+		new FileTool().write(net.traverseEdge(), "./data/t3.txt");*/
 	}
 }

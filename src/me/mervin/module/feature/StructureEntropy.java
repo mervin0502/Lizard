@@ -50,6 +50,16 @@ public class StructureEntropy {
 		return this.script(flag);
 	}
 	/**
+	 * construct entropy of the network
+	 * @param net network
+	 * @param flag
+	 * @return double
+	 */
+	public double script(Network net, boolean flag, int n){
+		this.net = net;
+		return this.script(flag, n);
+	}
+	/**
 	 * Construct entropy of the network
 	 * @return double
 	 */
@@ -62,10 +72,19 @@ public class StructureEntropy {
 	 * @return double
 	 */
 	public double script(boolean flag){
+		return this.script(flag, this.net.nodeNum);
+	}
+	/**
+	 * Construct entropy of the network
+	 * @param flag
+	 * @param n
+	 * @return double
+	 */
+	public double script(boolean flag, int n){
 	//	if(net.isConnectedNet()){
 			Degree degree = new Degree(this.net);
 			Map<Number, Number> degreeDistributionRatioMap = degree.netDegreeDistributionRatio();
-			return this._script(degreeDistributionRatioMap, flag);
+			return this._script(degreeDistributionRatioMap, flag, n);
 /*		}else{
 			D.p("no connected net:");
 			Set<Network> netSet = this.net.getAllSubNet();
@@ -84,9 +103,20 @@ public class StructureEntropy {
 	/**
 	 * 
 	 * @param degreeDistributionRatioMap network degree distribution ratio
+	 * @param flag
 	 * @return double
 	 */
-	private double _script(Map<Number, Number> degreeDistributionRatioMap, boolean flag){
+/*	private double _script(Map<Number, Number> degreeDistributionRatioMap, boolean flag){
+		return this._script(degreeDistributionRatioMap, flag, this.net.nodeNum);
+		}*/
+	/**
+	 * 
+	 * @param degreeDistributionRatioMap network degree distribution ratio
+	 * @param flag
+	 * @param n
+	 * @return double
+	 */
+	private double _script(Map<Number, Number> degreeDistributionRatioMap, boolean flag, int n){
 		double v = 0;
 		for(Number p:degreeDistributionRatioMap.values()){
 			//v+= -p.doubleValue()*(Math.log10(p.doubleValue())/Math.log10(2));
@@ -95,7 +125,7 @@ public class StructureEntropy {
 //			v+= -p.doubleValue()*(Math.log(p.doubleValue()));
 		}
 		if(flag){
-			int nodeNum = this.net.nodeNum;
+			int nodeNum = n;
 			double vMax = Math.log(nodeNum)/Math.log(2);
 			double vMin = vMax-(double)(nodeNum-1)/nodeNum*(Math.log(nodeNum-1)/Math.log(2));
 //			double vMax = Math.log(nodeNum);
