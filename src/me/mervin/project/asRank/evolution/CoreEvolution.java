@@ -62,7 +62,6 @@ public class CoreEvolution {
 				D.p("###################");
 			}
 		}
-		
 		pool.shutdown();
 		
 	}

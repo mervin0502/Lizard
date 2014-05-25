@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 import me.mervin.core.Global.NumberType;
 import me.mervin.util.D;
 import me.mervin.util.FileTool;
+import me.mervin.util.Pair;
 import me.mervin.util.PairList;
 
 
@@ -42,7 +43,9 @@ public class Statistics {
 //		s.p2pDegree();
 //		s.p2pLevel();
 //		s.p2pDiff();
-		s.p2pConnection();
+//		s.p2pConnection();
+//		s.p2pBetweenness();
+		s.PathInfo();
 	}
 	
 	
@@ -559,6 +562,229 @@ public class Statistics {
 		}//for
 		String dstFile = srcDir+"as-rel-stat\\p2p-rate.txt";
 		ft.write(sb, dstFile);
+	}
+	
+	
+	
+	public void p2pBetweenness(){
+		
+		String prefix = "c2p";
+		
+		
+		String srcFile = "./data/p2p/201308-"+prefix+".txt";
+		String nodeBetweennessFile = "./data/p2p/201308-node-betweenness.txt";
+		String nodeTransitDegreeFile = "./data/p2p/201308-node-transit-degree.txt";
+		String edgeBetweennessFile = "./data/p2p/201308-edge-betweenness.txt";
+		String coreNodeFile = "./data/p2p/201308-clique.txt";
+		
+		String dstFile = null;
+		FileTool ft = new FileTool();
+		Set<Pair<Number>> edgeSet = ft.read2SetPair(srcFile, NumberType.INTEGER);
+		Map<Number, Number> nodeBetweennessMap = ft.read2Map(nodeBetweennessFile, NumberType.INTEGER, NumberType.DOUBLE);
+		Map<Number, Number> nodeTransitDegreeMap = ft.read2Map(nodeTransitDegreeFile, NumberType.INTEGER, NumberType.DOUBLE);
+		Map<Pair<Number>, Number> edgeBetweennessMap = ft.read2MapPair(edgeBetweennessFile, NumberType.INTEGER);
+		Set<Number> coreNodeSet = ft.read2Set(coreNodeFile);
+		
+		
+		StringBuffer sb = new StringBuffer();
+		StringBuffer sb1 = new StringBuffer();
+		StringBuffer sb2 = new StringBuffer();
+		StringBuffer sb3 = new StringBuffer();
+		Number l = null;
+		Number r = null;
+		for(Pair<Number> p:edgeSet){
+			l = p.getL();
+			r = p.getR();
+			if(edgeBetweennessMap.get(p) != null){
+				double l2 = 0;
+				double l3 = 0;
+				if(nodeBetweennessMap.get(l) != null){
+					l2 = nodeBetweennessMap.get(l).doubleValue();
+					l3 = nodeTransitDegreeMap.get(l).doubleValue();
+				}
+				double r2 = 0;
+				double r3 = 0;
+				
+				double l4 = 0;
+				double l5 = 0;
+				if(nodeBetweennessMap.get(r) != null){
+					r2 = nodeBetweennessMap.get(r).doubleValue();
+					r3 = nodeTransitDegreeMap.get(r).doubleValue();
+					
+					l4 = l2/r2;
+					if(l4 < 1){
+						l4 = 1/l4;
+					}
+					l5 = l3/r3;
+					if(l5 < 1){
+						l5 = 1/l5;
+					}
+				}else{
+					l4 = -1;
+					l5 = -1;
+				}
+				
+				
+				if(coreNodeSet.contains(l) & coreNodeSet.contains(r)){
+					sb1.append(l).append("\t").append(r).append("\t");
+					sb1.append(edgeBetweennessMap.get(p)).append("\t");
+					sb1.append(l2).append("\t");
+					sb1.append(r2).append("\t");
+					sb1.append(l4).append("\t");
+					sb1.append(l3).append("\t");
+					sb1.append(r3).append("\t");
+					sb1.append(l5).append("\r\n");
+				}else if(!coreNodeSet.contains(l) & !coreNodeSet.contains(r)){
+					sb2.append(l).append("\t").append(r).append("\t");
+					sb2.append(edgeBetweennessMap.get(p)).append("\t");
+					sb2.append(l2).append("\t");
+					sb2.append(r2).append("\t");
+					sb2.append(l4).append("\t");
+					sb2.append(l3).append("\t");
+					sb2.append(r3).append("\t");
+					sb2.append(l5).append("\r\n");
+				}else{
+					sb3.append(l).append("\t").append(r).append("\t");
+					sb3.append(edgeBetweennessMap.get(p)).append("\t");
+					sb3.append(l2).append("\t");
+					sb3.append(r2).append("\t");
+					sb3.append(l4).append("\t");
+					sb3.append(l3).append("\t");
+					sb3.append(r3).append("\t");
+					sb3.append(l5).append("\r\n");
+				}
+				sb.append(l).append("\t").append(r).append("\t");
+				sb.append(edgeBetweennessMap.get(p)).append("\t");
+				sb.append(l2).append("\t");
+				sb.append(r2).append("\t");
+				sb.append(l4).append("\t");
+				sb.append(l3).append("\t");
+				sb.append(r3).append("\t");
+				sb.append(l5).append("\r\n");
+			}
+			
+		}
+		dstFile = "./data/p2p/201308-"+prefix+"-all-betweenness-trasit-rate.txt";
+		ft.write(sb, dstFile);
+		dstFile = "./data/p2p/201308-"+prefix+"-intra-betweenness-trasit-rate.txt";
+		ft.write(sb1, dstFile);
+		dstFile = "./data/p2p/201308-"+prefix+"-inter-betweenness-trasit-rate.txt";
+		ft.write(sb2, dstFile);
+		dstFile = "./data/p2p/201308-"+prefix+"-outer-betweenness-trasit-rate.txt";
+		ft.write(sb3, dstFile);
+		
+	}
+	
+	
+	public void PathInfo(){
+		
+		String srcFile = "F:\\data\\path\\2013\\201308";
+		String nodeBetweennessFile = "./data/p2p/201308-node-betweenness.txt";
+		String nodeTransitDegreeFile = "./data/p2p/201308-node-transit-degree.txt";
+		String edgeBetweennessFile = "./data/p2p/201308-edge-betweenness.txt";
+		String p2pEdgeFile = "./data/p2p/201308-p2p.txt";
+		String coreNodeFile = "./data/p2p/201308-clique.txt";
+		
+		String dstFile = null;
+		String dstDir = "./data/p2p/201308/";
+		FileTool ft = new FileTool();
+		Set<Pair<Number>> p2pEdgeSet = ft.read2SetPair(p2pEdgeFile, NumberType.INTEGER);
+		Map<Number, Number> nodeBetweennessMap = ft.read2Map(nodeBetweennessFile, NumberType.INTEGER, NumberType.DOUBLE);
+		Map<Number, Number> nodeTransitDegreeMap = ft.read2Map(nodeTransitDegreeFile, NumberType.INTEGER, NumberType.DOUBLE);
+		Map<Pair<Number>, Number> edgeBetweennessMap = ft.read2MapPair(edgeBetweennessFile, NumberType.INTEGER);
+		Set<Number> coreNodeSet = ft.read2Set(coreNodeFile);
+		Map<Integer, Integer> indexMap = new HashMap<Integer, Integer>();
+		File[] fileArr = ft.fileArr(srcFile);
+		StringBuffer flagStr = new StringBuffer();
+		for (int i = 0; i < fileArr.length; i++) {
+			String name = fileArr[i].getName();
+			String line = null;
+			String[] lineArr= null;
+			BufferedReader reader;
+			D.p(i);
+			try {
+				reader = new BufferedReader(new FileReader(fileArr[i]));
+				StringBuffer sb = new StringBuffer();
+				while((line = reader.readLine())!= null){
+					boolean flag = false;
+					//D.p(line);
+					lineArr = line.split("\\s+");
+					int l = 0;
+					int r = 0;
+					l = Integer.parseInt(lineArr[0]);
+					
+					sb.append(l).append("\t").append(nodeBetweennessMap.get(l)).append("\t");
+					if(coreNodeSet.contains(l)){
+						flagStr.append(1+"\t");
+						flag = true;
+						if(indexMap.containsKey(1)){
+							indexMap.put(1, indexMap.get(1)+1);
+						}else{
+							indexMap.put(1, 1);
+						}
+					}
+					for (int j = 1; j < lineArr.length; j++) {
+						r = Integer.parseInt(lineArr[j]);
+						if(coreNodeSet.contains(r)){
+							flagStr.append(j+"\t");
+							flag = true;
+							if(indexMap.containsKey(j)){
+								indexMap.put(j, indexMap.get(j)+1);
+							}else{
+								indexMap.put(j, 1);
+							}
+						}
+						
+						Pair<Number> p = new Pair<Number>(l,r, true);
+						Pair<Number> p2 = new Pair<Number>(l,r);
+						if(edgeBetweennessMap.containsKey(p)){
+							sb.append(edgeBetweennessMap.get(p)).append("\t");
+						}
+
+						if(p2pEdgeSet.contains(p)){
+							sb.append(0).append("\t");
+						}else{
+							sb.append(1).append("\t");
+						}
+						
+						sb.append(r).append("\t");
+						if(nodeBetweennessMap.containsKey(r)){
+							sb.append(nodeBetweennessMap.get(r)).append("\t");
+						}else{
+							sb.append(0).append("\t");
+						}
+						
+						l = r;
+					}//for
+					if(!flag){
+						flagStr.append(-1);
+						if(indexMap.containsKey(-1)){
+							indexMap.put(-1, indexMap.get(-1)+1);
+						}else{
+							indexMap.put(-1, 1);
+						}
+					}
+					flagStr.append("\r\n");
+					sb.append("\r\n");
+				}
+				dstFile = dstDir+name;
+				ft.write(sb, dstFile);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+
+		}//for
+		dstFile = dstDir+"index.txt";
+		D.p(indexMap);
+		ft.write(flagStr, dstFile);
 	}
 
 }
