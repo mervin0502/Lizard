@@ -192,6 +192,7 @@ public class MathTool {
 		return subtraction;
 	}
 	
+	
 	/**
 	 *  
 	 *  统计map中相同value数值出现的频数

@@ -1,4 +1,4 @@
-package me.mervin.project.linkPrediction;
+package me.mervin.module.linkPrediction;
 
 import java.util.HashMap;
 import java.util.HashSet;

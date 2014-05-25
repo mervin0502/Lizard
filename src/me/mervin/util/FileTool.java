@@ -774,6 +774,43 @@ public class FileTool {
 	
 	/**
 	 *  
+	 *  读取文件的内容到pair中
+	 * @param srcFile
+	 * @param numberType
+	 * @return Set<Pair>
+	 */
+	public  Map<Pair<Number>, Number> read2MapPair(String srcFile, NumberType numberType){
+		// HashMap<Number, Number> map = new  HashMap<Number, Number>();
+		 Map<Pair<Number>, Number> pair = new HashMap<Pair<Number>, Number>();
+		 File[] fileArr = this.fileArr(srcFile);
+		 for (int i = 0; i < fileArr.length; i++) {
+			try {
+				@SuppressWarnings("resource")
+				BufferedReader reader = new BufferedReader(new FileReader(fileArr[i]));
+				String line = null;
+				String[] lineArr = null;
+				while((line = reader.readLine()) != null){
+					if(line.charAt(0) != '#' && line.charAt(0) != '*' && line.charAt(0) != '%'){
+						lineArr = line.split("\t|(\\s+)");
+						Number l = MathTool.str2Number(numberType, lineArr[0]);
+						Number r = MathTool.str2Number(numberType, lineArr[1]);
+						Number v = MathTool.str2Number(NumberType.DOUBLE, lineArr[2]);
+						pair.put(new Pair<Number>(l, r), v);
+					}
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}//for
+		 return pair;
+	}
+	/**
+	 *  
 	 *  读取文件的内容到List<Pair<Number>>中
 	 * @param srcFile
 	 * @param numberType

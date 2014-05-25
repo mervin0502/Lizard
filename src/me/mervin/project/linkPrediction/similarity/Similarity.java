@@ -3,7 +3,7 @@ package me.mervin.project.linkPrediction.similarity;
 import java.util.Set;
 
 import me.mervin.core.Network;
-import me.mervin.project.linkPrediction.LinkPrediction;
+import me.mervin.module.linkPrediction.LinkPrediction;
 import me.mervin.util.E;
 import me.mervin.util.MathTool;
 

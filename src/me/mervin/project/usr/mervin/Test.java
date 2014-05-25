@@ -19,7 +19,7 @@ import me.mervin.core.Global.NumberType;
 import me.mervin.model.BANetwork;
 import me.mervin.model.internet.PFP;
 import me.mervin.module.feature.Degree;
-import me.mervin.project.linkPrediction.LinkPrediction;
+import me.mervin.module.linkPrediction.LinkPrediction;
 import me.mervin.project.linkPrediction.evaluation.AUC;
 import me.mervin.project.linkPrediction.evaluation.Precision;
 import me.mervin.project.linkPrediction.similarity.local.CN;

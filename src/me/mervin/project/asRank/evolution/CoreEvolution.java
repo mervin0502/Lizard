@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,6 +19,8 @@ import me.mervin.module.feature.Coreness;
 import me.mervin.util.D;
 import me.mervin.util.FileTool;
 import me.mervin.util.Log;
+import me.mervin.util.MapTool;
+import me.mervin.util.MathTool;
 import me.mervin.util.PairList;
 
 
@@ -34,7 +38,7 @@ public class CoreEvolution {
 	 */
 	public static void main(String[] args) {
 		// TODO 自动生成的方法存根
-		ExecutorService pool = Executors.newFixedThreadPool(8);
+		ExecutorService pool = Executors.newFixedThreadPool(2);
 		CoreEvolution ce = new CoreEvolution();
 		String srcDir = "E:\\data\\as-relationship\\";
 		String srcFile = null;
@@ -62,13 +66,93 @@ public class CoreEvolution {
 				D.p("###################");
 			}
 		}
-		
 		pool.shutdown();
 		
+//		CoreEvolution ce = new CoreEvolution();
+//		ce.maxCore();
+//		ce.coreFreq();
 	}
 	
 
-
+	public void maxCore(){
+		String srcDir = "E:\\data\\as-rel-core\\";
+		String srcFile = null;
+		String dstDir = "E:\\data\\";
+		String dstFile = null;
+		String date = null;
+		PairList<Number, Number> edgeList = null;
+		Network net = null;
+		Coreness core = new Coreness();
+		FileTool ft = new FileTool();
+		MapTool mt = new MapTool();
+		Map<Number, Number>  coreMap = null;
+		StringBuffer sb = new StringBuffer();
+		int i = 0;
+		for(int y = 1998; y <= 2013; y++){
+			for(int m = 1; m <= 12; m++){
+				//y = 2000;
+				//m = 5;
+				if(m < 10){
+					date = y+"0"+m+"01";
+				}else{
+					date = y+""+m+"01";
+				}
+				D.p(date);
+				srcFile = srcDir+date+"-core.txt";
+				coreMap = new HashMap<Number, Number>();
+				if(ft.isExist(srcFile)){
+					i++;
+					coreMap = ft.read2Map(srcFile);
+					sb.append(i).append("\t").append(mt.sort(coreMap, false, false).getR(0)).append("\r\n");
+				}
+				D.p("###################");
+			}
+		}
+		dstFile = dstDir+"max-core-evolution.txt";
+		ft.write(sb, dstFile);
+	}
+	
+	
+	public void coreFreq(){
+		String srcDir = "E:\\data\\as-rel-core\\";
+		String srcFile = null;
+		String dstDir = "E:\\data\\";
+		String dstFile = null;
+		String date = null;
+		PairList<Number, Number> edgeList = null;
+		Network net = null;
+		Coreness core = new Coreness();
+		FileTool ft = new FileTool();
+		MapTool mt = new MapTool();
+		Map<Number, Number>  coreMap = null;
+		StringBuffer sb = new StringBuffer();
+		int i = 0;
+		for(int y = 1998; y <= 2013; y++){
+			for(int m = 1; m <= 12; m++){
+				//y = 2000;
+				//m = 5;
+				if(m < 10){
+					date = y+"0"+m+"01";
+				}else{
+					date = y+""+m+"01";
+				}
+				D.p(date);
+				srcFile = srcDir+date+"-core.txt";
+				coreMap = new HashMap<Number, Number>();
+				if(ft.isExist(srcFile)){
+					i++;
+					D.p(i);
+					coreMap = ft.read2Map(srcFile);
+					for(Entry<Number, Number> e: MathTool.frequency(coreMap).entrySet()){
+						sb.append(i).append("\t").append(e.getKey()).append("\t").append(e.getValue()).append("\r\n");
+					}
+				}
+				D.p("###################");
+			}
+		}
+		dstFile = dstDir+"core-freq-evolution.txt";
+		ft.write(sb, dstFile);
+	}
 }
 
 class CoreCalculate extends Thread{
@@ -88,7 +172,7 @@ class CoreCalculate extends Thread{
 		Network net = null;
 		Coreness core = new Coreness();
 		FileTool ft = new FileTool();
-		if(new File(srcFile).exists()){
+		if(new File(srcFile).exists() && ! new File(dstFile).exists()){
 			edgeList = this.readFile(srcFile);
 			net = new Network(edgeList, NetType.DIRECTED);
 			D.p("Create Net:"+date+" done");
