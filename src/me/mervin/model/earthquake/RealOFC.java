@@ -30,11 +30,11 @@ public class RealOFC extends NetModel {
 	/*
 	 * 节点的能量阈值
 	 */
-	private float threshold = 0;
+	private double threshold = 0;
 	/*
 	 * 当前的能量最大值
 	 */
-//	private float maxPower = 0;
+//	private double maxPower = 0;
 	/*
 	 * 在一次地震中，地震位形更新总次数
 	 * ???概念的准确性
@@ -52,7 +52,7 @@ public class RealOFC extends NetModel {
 	 * @param netType 网络类型：有向（NetType.DIRECTED）五向(NetType.UNDIRECTED)
 	 * @param numberType 网络的节点ID类型长整型（NumberType.LONG）和整型（NumberType.INTEGER）
 	 */
-	public RealOFC(String fileName, NetType netType, NumberType numberType, float threshold){
+	public RealOFC(String fileName, NetType netType, NumberType numberType, double threshold){
 		super(fileName, netType, numberType);
 		this.threshold =threshold;
 		this.list = new ArrayList<Number>();
@@ -64,7 +64,7 @@ public class RealOFC extends NetModel {
 	 * 
 	 *  @param threshold 设置节点的能量阈值
 	 */
- 	public void setParam(float threshold){
+ 	public void setParam(double threshold){
 		this.threshold =threshold;
 	}
 	
@@ -77,10 +77,10 @@ public class RealOFC extends NetModel {
 		// TODO Auto-generated method stub
 		Set<Number> nodeSet = this.getAllNodeId();
 		Number nodeId = null;
-		float temp = 0;
+		double temp = 0;
 		for(Iterator<Number> it = nodeSet.iterator(); it.hasNext();){
 			nodeId = it.next();
-			temp = (float) ((MathTool.random()-Math.pow(1, -6))*this.threshold);
+			temp = (double) ((MathTool.random()-Math.pow(1, -6))*this.threshold);
 			D.p("rand"+temp);
 			this.setNodeWeight(nodeId, temp);
 /*			if(this.maxPower < temp){
@@ -104,7 +104,7 @@ public class RealOFC extends NetModel {
 		HashMap<Number, Number> collapseUpdate = new HashMap<Number, Number>();//震性更新次数
 		
 		Number temp = null;
-		float maxPower = 0;
+		double maxPower = 0;
 		
 		FileTool f = new FileTool();
 		String desPath = dstDir+"log.txt";
@@ -206,11 +206,11 @@ public class RealOFC extends NetModel {
 	/*
 	 * 在网络均匀增加能量之前，找出网络中能量的最大值
 	 */
-	private float _getMaxPower(){
+	private double _getMaxPower(){
 		Set<Number> nodeSet = this.getAllNodeId();
 		
-		float maxPower = 0;
-		float temp = 0;
+		double maxPower = 0;
+		double temp = 0;
 		Number nodeId = null;
 		for(Iterator<Number> it = nodeSet.iterator(); it.hasNext();){
 			nodeId = it.next();
@@ -225,12 +225,12 @@ public class RealOFC extends NetModel {
 	 * 在上一时间步，完成一次地震。
 	 * 在该时间步，网络均匀的增加能量，并且记录下能量不小于阈值的节点
 	 */
-	private Map<Number, Number> _increasePower(float maxPower){
+	private Map<Number, Number> _increasePower(double maxPower){
 		Set<Number> nodeSet = this.getAllNodeId();
 		Map<Number, Number> collapseNodeSet = new HashMap<Number, Number>();//将要发生倒塌的节点,以及该节点处的能量值
 		Number nodeId = null;
-		float temp = 0;
-		float addPower = this.threshold-maxPower;
+		double temp = 0;
+		double addPower = this.threshold-maxPower;
 		for(Iterator<Number> it = nodeSet.iterator(); it.hasNext();){
 			nodeId = it.next();
 			temp = this.getNodeWeight(nodeId)+addPower;//能量的均匀增加
@@ -256,8 +256,9 @@ public class RealOFC extends NetModel {
 		Number nodeId = null, adjNodeId = null;
 		Set<Number> adjNodeSet = null;
 		
-		float q = 0;//邻接点获取能量的比例（ F(i) = F(i)+q*F(j) ）i是j的邻接点
-		float nodeIdPower = 0, temp = 0;
+		double q = 0;//邻接点获取能量的比例（ F(i) = F(i)+q*F(j) ）i是j的邻接点
+		double nodeIdPower = 0;
+		double temp = 0;
 		
 		MapTool mt = new MapTool();
 		/*
@@ -274,7 +275,7 @@ public class RealOFC extends NetModel {
 			//nodeIdPower = (Float) oldNodeMap.get(nodeId);//保证节点的同步倒塌
 			nodeIdPower = (Float) pl.getR(i);//保证节点的同步倒塌
 			adjNodeSet = this.getAdjNodeId(nodeId);//获取邻接点
-			q = MathTool.random()*((float)1/adjNodeSet.size());
+			q = MathTool.random()*((double)1/adjNodeSet.size());
 			
 			/*
 			 * 节点倒塌

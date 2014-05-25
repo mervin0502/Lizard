@@ -223,16 +223,16 @@ public class Network implements InterfaceNet{
 				String[] lineArr = null;//将变量line进行分割
 					
 				Number preNodeId = null;
-				float preNodeWeight = 1;
-				float postNodeWeight = 1;
+				double preNodeWeight = 1;
+				double postNodeWeight = 1;
 				Number postNodeId = null;
-				float edgeWeight = 1;
+				double edgeWeight = 1;
 				
 				while((line = reader.readLine()) != null){
 					//D.p(line);
 					if(!line.startsWith("#")){
 						//去掉line两边的空格，然后匹配分割
-						lineArr = line.trim().split("\t|(\\s{1,})");
+						lineArr = line.trim().split("\\s+|,");
 						switch(lineArr.length){
 						case 0:
 							continue;
@@ -252,7 +252,7 @@ public class Network implements InterfaceNet{
 							//第三个表示边的权重
 							preNodeId = MathTool.str2Number(Network.getNumberType(), lineArr[0]);
 							postNodeId = MathTool.str2Number(Network.getNumberType(), lineArr[1]);
-							edgeWeight = Float.parseFloat((lineArr[2]));
+							edgeWeight = Double.parseDouble((lineArr[2]));
 							insertEdge(preNodeId,  postNodeId,  edgeWeight);
 							break;
 						case 4:
@@ -262,9 +262,9 @@ public class Network implements InterfaceNet{
 							//第三个数表示第二个节点ID
 							//第四个数表示第二个节点权重
 							preNodeId = MathTool.str2Number(Network.getNumberType(), lineArr[0]);
-							preNodeWeight = Float.parseFloat(lineArr[1]);
+							preNodeWeight = Double.parseDouble(lineArr[1]);
 							postNodeId = MathTool.str2Number(Network.getNumberType(), lineArr[2]);
-							postNodeWeight = Float.parseFloat(lineArr[3]);
+							postNodeWeight = Double.parseDouble(lineArr[3]);
 							insertEdge(preNodeId, preNodeWeight, postNodeId, postNodeWeight);
 							break;
 						case 5:
@@ -275,10 +275,10 @@ public class Network implements InterfaceNet{
 							//第四个数表示第二个节点权重
 							//第五个数表示边的权重
 							preNodeId = MathTool.str2Number(Network.getNumberType(), lineArr[0]);
-							preNodeWeight = Float.parseFloat(lineArr[1]);
+							preNodeWeight = Double.parseDouble(lineArr[1]);
 							postNodeId = MathTool.str2Number(Network.getNumberType(), lineArr[2]);
-							postNodeWeight = Float.parseFloat(lineArr[3]);
-							edgeWeight = Float.parseFloat(lineArr[4]);
+							postNodeWeight = Double.parseDouble(lineArr[3]);
+							edgeWeight = Double.parseDouble(lineArr[4]);
 							insertEdge(preNodeId, preNodeWeight, postNodeId, postNodeWeight, edgeWeight);
 							break;
 						}//switch
@@ -401,7 +401,7 @@ public class Network implements InterfaceNet{
 	 * @param  node
 	 * @return Integer 
 	 */
-	public float getNodeWeight(Node node){
+	public double getNodeWeight(Node node){
 		return node.getWeight();
 	}
 	/**
@@ -410,7 +410,7 @@ public class Network implements InterfaceNet{
 	 * @param  nodeId
 	 * @return Integer 
 	 */
-	public float getNodeWeight(Number nodeId){
+	public double getNodeWeight(Number nodeId){
 		return this.getNodeById(nodeId).getWeight();
 	}
 	
@@ -439,10 +439,10 @@ public class Network implements InterfaceNet{
 	 *  Function:设置节点的权重
 	 * 
 	 *  @param nodeId 网络节点的ID
-	 *  @param w 网络节点的权重
+	 *  @param temp 网络节点的权重
 	 */
-	public void setNodeWeight(Number nodeId, float w){
-		this.getNodeById(nodeId).setWeight(w);
+	public void setNodeWeight(Number nodeId, double temp){
+		this.getNodeById(nodeId).setWeight(temp);
 	}
 	
 	/**
@@ -498,10 +498,10 @@ public class Network implements InterfaceNet{
 	 *  获取边的权重
 	 * @param preNode
 	 * @param postNode
-	 * @return float
+	 * @return double
 	 */
-	public float getEdgeWeight(Node preNode, Node postNode){
-		float weight = 0;
+	public double getEdgeWeight(Node preNode, Node postNode){
+		double weight = 0;
 		if(this.isHasEdge(preNode, postNode)){
 			LinkedList<Edge> adjEdges = preNode.getAdjEdges();
 			Edge edge = null;
@@ -523,9 +523,9 @@ public class Network implements InterfaceNet{
 	 *  获取边的权重
 	 * @param preNodeId
 	 * @param postNodeId
-	 * @return float
+	 * @return double
 	 */
-	public float getEdgeWeight(Number preNodeId, Number postNodeId){
+	public double getEdgeWeight(Number preNodeId, Number postNodeId){
 		return this.getEdgeWeight(this.getNodeById(preNodeId), this.getNodeById(postNodeId));		
 	}
 	
@@ -734,7 +734,7 @@ public class Network implements InterfaceNet{
 	 * @param node
 	 * @param nodeWeight
 	 */
-	public void updateNodeWeight(Node node, float nodeWeight){
+	public void updateNodeWeight(Node node, double nodeWeight){
 		node.setWeight(nodeWeight);
 	}
 	/**
@@ -743,7 +743,7 @@ public class Network implements InterfaceNet{
 	 * @param nodeId
 	 * @param nodeWeight
 	 */
-	public void updateNodeWeight(Number nodeId, float nodeWeight){
+	public void updateNodeWeight(Number nodeId, double nodeWeight){
 		this.getNodeById(nodeId).setWeight(nodeWeight);
 	}
 	
@@ -754,7 +754,7 @@ public class Network implements InterfaceNet{
 	 * @param edgeWeight
 	 * @return boolean
 	 */
-	public boolean updateEdgeWeight(Node preNode, Node postNode, float edgeWeight){
+	public boolean updateEdgeWeight(Node preNode, Node postNode, double edgeWeight){
 		LinkedList<Edge> adjEdges = null;
 		Edge edge = null;
 		boolean flag = false;
@@ -795,7 +795,7 @@ public class Network implements InterfaceNet{
 	 * @param edgeWeight
 	 * @return boolean
 	 */
-	public boolean updateEdgeWeight(Number preNodeId, Number postNodeId, float edgeWeight){
+	public boolean updateEdgeWeight(Number preNodeId, Number postNodeId, double edgeWeight){
 		return this.updateEdgeWeight(this.getNodeById(preNodeId), this.getNodeById(postNodeId), edgeWeight);
 	}
 
@@ -973,7 +973,7 @@ public class Network implements InterfaceNet{
 	 * @param nodeId
 	 * @return boolean
 	 */
-	public boolean insertNode(final Number nodeId, float weight){
+	public boolean insertNode(final Number nodeId, double weight){
 		Node preNode = this.getNodeById(nodeId);
 		if(preNode == null){
 			//新加入的节点preNode不存在
@@ -1029,7 +1029,7 @@ public class Network implements InterfaceNet{
 	 * @param  edgeWeight
 	 * @return boolean
 	 */
-	public Edge insertEdge(final Number preNodeId, final Number postNodeId, float edgeWeight){
+	public Edge insertEdge(final Number preNodeId, final Number postNodeId, double edgeWeight){
 		return insertEdge(preNodeId, 1,  postNodeId, 1, edgeWeight);
 	}
 	
@@ -1042,7 +1042,7 @@ public class Network implements InterfaceNet{
 	 * @param  postNodeWeight
 	 * @return boolean
 	 */
-	public Edge insertEdge(final Number preNodeId, float preNodeWeight, final Number postNodeId, float postNodeWeight){
+	public Edge insertEdge(final Number preNodeId, double preNodeWeight, final Number postNodeId, double postNodeWeight){
 		return insertEdge(preNodeId, preNodeWeight,  postNodeId, postNodeWeight, 1);
 	}
 
@@ -1056,7 +1056,7 @@ public class Network implements InterfaceNet{
 	 * @param  edgeWeight
 	 * @return boolean
 	 */
-	public Edge insertEdge(final Number preNodeId, float preNodeWeight, final Number postNodeId, float postNodeWeight, float edgeWeight){
+	public Edge insertEdge(final Number preNodeId, double preNodeWeight, final Number postNodeId, double postNodeWeight, double edgeWeight){
 		
 		if(preNodeId.equals(postNodeId) && !Network.isLoop){
 			//D.p("不允许子环");
@@ -1125,6 +1125,7 @@ public class Network implements InterfaceNet{
 			this.edgeNum++;
 		}else{
 			this.updateEdgeWeight(preNode, postNode, edgeWeight);
+			edge = this.getEdgeByNode(preNode, postNode);
 		}
 		
 		

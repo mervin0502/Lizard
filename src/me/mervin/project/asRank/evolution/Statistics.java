@@ -7,14 +7,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.w3c.dom.NodeList;
 
 import me.mervin.core.Global.NumberType;
 import me.mervin.util.D;
@@ -42,10 +47,11 @@ public class Statistics {
 //		s.levelAndRate();
 //		s.p2pDegree();
 //		s.p2pLevel();
-//		s.p2pDiff();
+		s.p2pDiff();
 //		s.p2pConnection();
 //		s.p2pBetweenness();
-		s.PathInfo();
+		///s.PathInfo();
+		//s.treeHeight();
 	}
 	
 	
@@ -66,12 +72,18 @@ public class Statistics {
 		}
 		SortedSet<Integer> set = null;
 		SortedSet<Integer> h = null;
+		Set<Number> allCoreNodeSet = ft.read2Set(dstDir+"all-core-node.txt");
 		Map<Number, Number> hDist = null;
 		Map<Number, Number> maxMap = new HashMap<Number, Number>();
 		Map<Number, Number> minMap = new HashMap<Number, Number>();
 		Map<Number, Number> avgMap = new HashMap<Number, Number>();
-		
+		Map<Number, LinkedList<Number>> nodeLifeMap = new HashMap<Number, LinkedList<Number>>();
+		for(Number node:allCoreNodeSet){
+			LinkedList<Number> l = new LinkedList<Number>();
+			nodeLifeMap.put(node, l);
+		}
 		int fileNum = 0;
+		StringBuffer sb4  = new StringBuffer();
 		for(int y = 1998; y <= 2013; y++){
 			for(int m = 1; m <= 12; m+=1){
 				if(m < 10){
@@ -96,10 +108,12 @@ public class Statistics {
 						int j = 34, i = 0;
 						int count = 0, max = 0, min = Integer.MAX_VALUE, sum = 0;
 						double avg = 0;
+						Map<Number, Number> oneRecord = new HashMap<Number, Number>();
 						while((line = reader.readLine())!= null){
 //							D.p(line);
 //							D.p(lineArr[0]);
 							lineArr = line.split("\\s+");
+							//allCoreNodeSet.add(Integer.parseInt(lineArr[0]));
 							if(!set.contains(Integer.parseInt(lineArr[0]))){
 								set.add(Integer.parseInt(lineArr[0]));
 							}else{
@@ -127,7 +141,20 @@ public class Statistics {
 								min = height;
 							}
 							sum += height;
+							oneRecord.put(Integer.parseInt(lineArr[0]), height);
 						}//while
+						
+						
+						for(Number node2:allCoreNodeSet ){
+							if(oneRecord.containsKey(node2)){
+								nodeLifeMap.get(node2).add(oneRecord.get(node2));
+								if((1 <= oneRecord.get(node2).intValue() && oneRecord.get(node2).intValue() <= 4)){
+									sb4.append(node2).append("\r\n");
+								}
+							}else{
+								nodeLifeMap.get(node2).add(0);
+							}
+						}
 						
 						avg = (double)sum/count;
 						maxMap.put(fileNum, max);
@@ -182,6 +209,15 @@ public class Statistics {
 			sb.append("\r\n");
 		}
 		 dstFile = dstDir+"height_1.txt";
+//		 D.p(allCoreNodeSet);
+		 D.p(sb4);
+/*		 for(Entry<Number, LinkedList<Number>> e:nodeLifeMap.entrySet()){
+			 System.out.print(e.getKey()+"\t");
+			 for(Number temp:e.getValue()){
+				 System.out.print(temp+"\t");
+			 }
+			 System.out.print("\r\n");
+		 }*/
 		ft.write(sb, dstFile);
 	}
 
@@ -468,7 +504,7 @@ public class Statistics {
 				}else{
 					date = y +""+m+"01";
 				}
-				Map<Number, Number> map = new HashMap<Number,Number>();
+				Map<Number, Number> map = new TreeMap<Number,Number>();
 				String srcFile = srcDir+date+"-level.txt";
 				if(!ft.isExist(srcFile)){
 					continue;
@@ -488,15 +524,21 @@ public class Statistics {
 					}
 				}
 				
-				
+				D.p(date);
 				String dstFile = srcDir+date+"-diff.txt";
 				ft.write(map, dstFile);
-				
+				int sum = 0;
+				StringBuffer sb = new StringBuffer();
 				for(Number t1:map.keySet()){
-					map.put(t1, (double)map.get(t1).intValue()/count);
+					int c = map.get(t1).intValue();
+					sum += c;
+					map.put(t1, (double)c/count);
+					sb.append(t1).append("\t").append((double)sum/count).append("\r\n");
 				}
 				dstFile = srcDir+"diff\\"+date+"-diff-rate.txt";
 				ft.write(map, dstFile);
+				dstFile = srcDir+"diff\\"+date+"-diff-acc-rate.txt";
+				ft.write(sb, dstFile);
 			}
 		}
 	}

@@ -41,6 +41,13 @@ public class D {
 			System.out.println("null");
 		}
 	}
+	public static void f(Object o){
+		if(o != null){
+			System.out.print(o.toString());
+		}else{
+			System.out.print("null");
+		}
+	}
 	
 	public static void e(){
 		System.exit(0);

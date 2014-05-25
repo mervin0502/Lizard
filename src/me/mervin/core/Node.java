@@ -45,7 +45,7 @@ import java.util.Map;
 
 public class Node {
 	private Number nodeId = 0;//网络的ID
-	private float weight = 0;//在网络中点的权重
+	private double weight = 0;//在网络中点的权重
 	private Attribute attr = null;//节点的属性
 	private LinkedList<Edge> adjEdges = new LinkedList<Edge>();//邻接边
 	
@@ -71,8 +71,8 @@ public class Node {
 	public void setNodeId(Number nodeId){
 		this.nodeId = nodeId;
 	}
-	public void setWeight(float nodeWeight){
-		this.weight = nodeWeight;
+	public void setWeight(double temp){
+		this.weight = temp;
 	}
 	public void setAdjEdges(LinkedList<Edge> adjEdges){
 		this.adjEdges = adjEdges;
@@ -92,7 +92,7 @@ public class Node {
 	public Number getNodeId(){
 		return this.nodeId;
 	}
-	public float getWeight(){
+	public double getWeight(){
 		return this.weight;
 	}
 	public LinkedList<Edge> getAdjEdges(){
