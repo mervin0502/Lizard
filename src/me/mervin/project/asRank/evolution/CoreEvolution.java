@@ -38,7 +38,7 @@ public class CoreEvolution {
 	 */
 	public static void main(String[] args) {
 		// TODO 自动生成的方法存根
-		ExecutorService pool = Executors.newFixedThreadPool(2);
+/*		ExecutorService pool = Executors.newFixedThreadPool(2);
 		CoreEvolution ce = new CoreEvolution();
 		String srcDir = "E:\\data\\as-relationship\\";
 		String srcFile = null;
@@ -66,16 +66,16 @@ public class CoreEvolution {
 				D.p("###################");
 			}
 		}
-		pool.shutdown();
+		pool.shutdown();*/
 		
-//		CoreEvolution ce = new CoreEvolution();
-//		ce.maxCore();
-//		ce.coreFreq();
+		CoreEvolution ce = new CoreEvolution();
+		ce.maxCore();
+		ce.coreFreq();
 	}
 	
 
 	public void maxCore(){
-		String srcDir = "E:\\data\\as-rel-core\\";
+		String srcDir = "E:\\data\\core-undirected\\";
 		String srcFile = null;
 		String dstDir = "E:\\data\\";
 		String dstFile = null;
@@ -87,6 +87,7 @@ public class CoreEvolution {
 		MapTool mt = new MapTool();
 		Map<Number, Number>  coreMap = null;
 		StringBuffer sb = new StringBuffer();
+		StringBuffer sb2 = new StringBuffer();
 		int i = 0;
 		for(int y = 1998; y <= 2013; y++){
 			for(int m = 1; m <= 12; m++){
@@ -104,17 +105,21 @@ public class CoreEvolution {
 					i++;
 					coreMap = ft.read2Map(srcFile);
 					sb.append(i).append("\t").append(mt.sort(coreMap, false, false).getR(0)).append("\r\n");
+					
+					sb2.append(i).append("\t").append(MathTool.average(MathTool.frequency(coreMap))).append("\r\n");
 				}
 				D.p("###################");
 			}
 		}
-		dstFile = dstDir+"max-core-evolution.txt";
-		ft.write(sb, dstFile);
+		//dstFile = dstDir+"core-undirected-max-evolution.txt";
+		//ft.write(sb, dstFile);
+		dstFile = dstDir+"core-undirected-avg-evolution.txt";
+		ft.write(sb2, dstFile);
 	}
 	
 	
 	public void coreFreq(){
-		String srcDir = "E:\\data\\as-rel-core\\";
+		String srcDir = "E:\\data\\core-undirected\\";
 		String srcFile = null;
 		String dstDir = "E:\\data\\";
 		String dstFile = null;
@@ -143,14 +148,17 @@ public class CoreEvolution {
 					i++;
 					D.p(i);
 					coreMap = ft.read2Map(srcFile);
-					for(Entry<Number, Number> e: MathTool.frequency(coreMap).entrySet()){
+					Map<Number, Number> rate = MathTool.ratio(MathTool.frequency(coreMap));
+					dstFile = dstDir+"core\\rate\\"+date+"-core-rate.txt";
+					ft.write(rate, dstFile);
+					for(Entry<Number, Number> e: rate.entrySet()){
 						sb.append(i).append("\t").append(e.getKey()).append("\t").append(e.getValue()).append("\r\n");
 					}
 				}
 				D.p("###################");
 			}
 		}
-		dstFile = dstDir+"core-freq-evolution.txt";
+		dstFile = dstDir+"core\\core-undirected-rate-evolution.txt";
 		ft.write(sb, dstFile);
 	}
 }

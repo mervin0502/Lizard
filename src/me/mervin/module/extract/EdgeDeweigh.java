@@ -45,9 +45,9 @@ import me.mervin.util.PairSet;
  * 2，操作步骤：
  * 3，运行示例：	EdgeDeweigh ed = new EdgeDeweigh("../data/ips.txt","../data/edge2.txt");
 				Pair.netType = ed.netType;
-				ed.reduce();
+				ed.script();
 				
-				new EdgeDeweigh("../data/ips.txt","../data/edge2.txt").run()
+				new EdgeDeweigh("../data/ips.txt","../data/edge2.txt").script()
  **********************************************************************************/
 
 public class EdgeDeweigh {

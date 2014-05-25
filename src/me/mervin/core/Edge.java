@@ -53,7 +53,7 @@ public class Edge {
 	//private Number adjNodeId = 0;//邻接点的ID
 	private Node preNode = null;//源节点
 	private Node postNode = null;//邻接点
-	private float weight = 0;//边的权重
+	private double weight = 0;//边的权重
 	private Attribute attr = null;
 	//初始化
 	public Edge(){
@@ -77,7 +77,7 @@ public class Edge {
 	public void setPostNode(Node postNode){
 		this.postNode = postNode;
 	}
-	public void setweight(float edgeWeight){
+	public void setweight(double edgeWeight){
 		this.weight = edgeWeight;
 	}
 	public void setAtrr(String key, String value){
@@ -105,7 +105,7 @@ public class Edge {
 	public Number getPostNodeId(){
 		return this.postNode.getNodeId();
 	}
-	public float getWeight(){
+	public double getWeight(){
 		return this.weight;
 	}
 	public String getAttr(String key){

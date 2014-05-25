@@ -52,8 +52,8 @@ public class MathTool {
 			return Long.parseLong(numStr);
 		}else if(numberType.equals(NumberType.INTEGER)){
 			return Integer.parseInt(numStr);
-		}else if(numberType.equals(NumberType.FLOAT)){
-			return Float.parseFloat(numStr);
+		}else if(numberType.equals(NumberType.DOUBLE)){
+			return Double.parseDouble(numStr);
 		}else{
 			return Double.parseDouble(numStr);
 		}
@@ -91,8 +91,8 @@ public class MathTool {
 /*	public static Number str2Num(NumberType numType, String numStr){
 		if(numType.equals(NumberType.LONG)){
 			return Long.parseLong(numStr);
-		} else if (numType.equals(NumberType.FLOAT)) {
-			return Float.parseFloat(numStr);
+		} else if (numType.equals(NumberType.double)) {
+			return double.parseFloat(numStr);
 		} else {
 			return Integer.parseInt(numStr);
 		}
@@ -216,8 +216,8 @@ public class MathTool {
 	}
 	/**
 	 *  
-	 *  计算节点的分布频率
-	 * @param map
+	 *  计算节点的分布率
+	 * @param map 频率
 	 * @return Map<Number, Number>
 	 */
 	public static Map<Number, Number> ratio(Map<Number, Number> map){
@@ -257,9 +257,9 @@ public class MathTool {
 	 *  Function:计算degreeMap中的平均值
 	 * 
 	 *  @param degreeMap
-	 *  @return float
+	 *  @return double
 	 */
-	public static float average(Map<Number, Number> degreeMap){
+	public static double average(Map<Number, Number> degreeMap){
 		int count = 0;
 		int totalNodes = 0;
 		Collection<Number> c = degreeMap.keySet();
@@ -272,7 +272,7 @@ public class MathTool {
 			count += key.intValue()*value.intValue();
 			totalNodes += value.intValue();
 		}
-		return count/(float)totalNodes;
+		return count/(double)totalNodes;
 	}
 	/**
 	 *  
@@ -310,14 +310,55 @@ public class MathTool {
 		}
 		return min;
 	}
+	
+	/**
+	 * map中value值相加
+	 * @param l
+	 * @param r
+	 * @return Map<Number, Number>
+	 */
+	public static Map<Number, Number> add(Map<Number, Number> l, Map<Number, Number> r){
+		
+		return add(l, r, NumberType.INTEGER);
+	}
+	/**
+	 * map中value值相加
+	 * @param l
+	 * @param r
+	 * @param numberType
+	 * @return Map<Number, Number>
+	 */
+	public static Map<Number, Number> add(Map<Number, Number> l, Map<Number, Number> r, NumberType numberType){
+		Map<Number, Number> res = new HashMap<Number, Number>();
+		Set<Number> kSet = new HashSet<Number>();
+		kSet.addAll(l.keySet());
+		kSet.addAll(r.keySet());
+		for(Number k:kSet){
+			Number lV = (l.containsKey(k)?l.get(k):0);
+			Number rV = (r.containsKey(k)?r.get(k):0);
+			Number sum = 0;
+			switch(numberType){
+			case LONG:sum = lV.longValue()+rV.longValue();
+			break;
+			case INTEGER:sum = lV.intValue()+rV.intValue();
+			break;
+			case FLOAT: sum = lV.floatValue()+rV.floatValue();
+			break;
+			case DOUBLE:sum = lV.doubleValue()+rV.doubleValue();
+			break;
+			}
+			res.put(k, sum);
+		}
+		return res;
+	}
 	/**
 	 *  
 	 *  产生一个0.0~1.0之间的随机数
-	 * @return float
+	 * @return double
 	 */
-	public static float random(){
-		float p = 0;
-		p = (float) Math.random();
+	public static double random(){
+		double p = 0;
+		p = (double) Math.random();
 		return p;
 	}
 	/**

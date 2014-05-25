@@ -892,6 +892,61 @@ public class FileTool {
 	 * @param path
 	 * @return File[]
 	 */
+	public File[] fileArr(File f){
+		File[] fileArr = null;
+		//D.p(path);
+		//D.p(f.getAbsoluteFile());
+		if(f.isDirectory()){
+			fileArr = f.listFiles();
+		}else{
+			fileArr = new File[1];
+			fileArr[0] = f;
+		}
+		return fileArr;
+	}
+	/**
+	 *  
+	 *  获取文件对象数组
+	 * @param path
+	 * @return File[]
+	 */
+	public File[] fileArr(File f, Collection<String> collection){
+		File[] fileArr = null;
+		//D.p(path);
+		//D.p(f.getAbsoluteFile());
+		if(f.isDirectory()){
+			fileArr = f.listFiles(new FileSelector(collection));
+		}else{
+			fileArr = new File[1];
+			fileArr[0] = f;
+		}
+		return fileArr;
+	}
+	
+	/**
+	 *  
+	 *  获取文件对象数组
+	 * @param path
+	 * @return File[]
+	 */
+	public File[] fileArr(File f, String filter){
+		File[] fileArr = null;
+		//D.p(path);
+		//D.p(f.getAbsoluteFile());
+		if(f.isDirectory()){
+			fileArr = f.listFiles(new FileSelector(filter));
+		}else{
+			fileArr = new File[1];
+			fileArr[0] = f;
+		}
+		return fileArr;
+	}
+	/**
+	 *  
+	 *  获取文件对象数组
+	 * @param path
+	 * @return File[]
+	 */
 	public File[] fileArr(String path){
 		File[] fileArr = null;
 		//D.p(path);

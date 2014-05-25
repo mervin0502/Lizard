@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import me.mervin.core.Global.NumberType;
 import me.mervin.util.D;
 import me.mervin.util.FileTool;
 import me.mervin.util.PairList;
@@ -29,7 +30,8 @@ public class CoreNodeEvolution {
 	
 	public static void main(String[] args){
 		CoreNodeEvolution cne = new CoreNodeEvolution();
-		cne.CoreNodeLifeTime();
+		//cne.CoreNodeLifeTime();
+		cne.coreNodeIndex();
 	}
 	
 	/*
@@ -142,4 +144,118 @@ public class CoreNodeEvolution {
 //		ft.write(numberMap, dstFile);
 
 	}
+
+
+	public void coreNodeIndex(){
+		//度、聚类系数、核、Customer和peer
+		String srcDir = "E:\\data\\";
+		String coreNodeSrcFile ="";
+		String degreeSrcFile = "";
+		String ccSrcFile = "";
+		String coreSrcFile = "";
+		String srcFile = "";
+		String peerSrcFile = "";
+		
+		String dstFile = "";
+		
+		
+		FileTool ft = new FileTool();
+		Thread t = null;
+		String date = null;
+		
+		for(int y = 1998; y <= 2013; y++){
+			for(int m = 1; m <= 12; m++){
+				//y = 2000;
+				//m = 5;
+				if(m < 10){
+					date = y+"0"+m+"01";
+				}else{
+					date = y+""+m+"01";
+				}
+				D.p(date);
+				coreNodeSrcFile = srcDir+"as-rel-res\\"+date+"\\core-node.txt";
+				
+				if(ft.isExist(coreNodeSrcFile)){
+					StringBuffer sb = new StringBuffer();
+					Set<Number> coreNodeSet = ft.read2Set(coreNodeSrcFile);
+					degreeSrcFile = srcDir+"degree\\"+date+"-degree.txt";
+					Map<Number, Number> degreeMap = ft.read2Map(degreeSrcFile);
+					ccSrcFile = srcDir+"as-rel-cc\\"+date+"-cc.txt";
+					Map<Number, Number> ccMap = ft.read2Map(ccSrcFile, NumberType.INTEGER, NumberType.DOUBLE);
+					coreSrcFile = srcDir+"core-undirected\\"+date+"-core.txt";
+					Map<Number, Number> coreMap = ft.read2Map(coreSrcFile);
+					
+					
+					srcFile = srcDir+"as-relationship\\"+date+".as-rel.txt";
+					Map<Number, Number> cusMap = new HashMap<Number, Number>();
+					peerSrcFile = srcDir+"as-rel-degree\\"+date+"-peer.txt";
+					Map<Number, Number> peerMap =  new HashMap<Number, Number>();
+					String line = null;
+					String[] lineArr = null;
+					try {
+						BufferedReader reader = new BufferedReader(new FileReader(srcFile));
+						while((line = reader.readLine())!= null){
+							if(line.charAt(0) != '#'){
+								lineArr = line.split("\\|");
+								int l = Integer.parseInt(lineArr[0]);
+								int r = Integer.parseInt(lineArr[1]);
+								if(lineArr[2].equals("-1")){
+									if(coreNodeSet.contains(l)){
+										if(cusMap.containsKey(l)){
+											cusMap.put(l, cusMap.get(l).intValue()+1);
+										}else{
+											cusMap.put(l, 1);
+										}
+									}
+									
+								}else{
+									if(coreNodeSet.contains(l)){
+										if(peerMap.containsKey(l)){
+											peerMap.put(l, peerMap.get(l).intValue()+1);
+										}else{
+											peerMap.put(l, 1);
+										}
+									}
+									if(coreNodeSet.contains(r)){
+										if(peerMap.containsKey(r)){
+											peerMap.put(r, peerMap.get(r).intValue()+1);
+										}else{
+											peerMap.put(r, 1);
+										}
+									}
+								}
+							}
+						}
+					} catch (FileNotFoundException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					}
+					
+					
+					
+					for(Number temp:coreNodeSet){
+						sb.append(temp).append("\t");
+						sb.append(degreeMap.get(temp)).append("\t");
+						sb.append(ccMap.get(temp)).append("\t");
+						sb.append(coreMap.get(temp)).append("\t");
+						sb.append(cusMap.get(temp)).append("\t");
+						sb.append(peerMap.get(temp)).append("\r\n");
+					}
+					dstFile = srcDir+"core-node\\"+date+".txt";
+					ft.write(sb, dstFile);
+				}
+				D.p("###################");
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
 }

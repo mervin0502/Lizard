@@ -103,7 +103,7 @@ public interface InterfaceNet {
 	 * @param node
 	 * @return Integer
 	 */
-	public float getNodeWeight(Node node);
+	public double getNodeWeight(Node node);
 	/**
 	 * 
 	 *  Function:设置节点的权重
@@ -111,32 +111,32 @@ public interface InterfaceNet {
 	 *  @param nodeId 网络节点的ID
 	 *  @param w 网络节点的权重
 	 */
-	public void setNodeWeight(Number nodeId, float w);
+	public void setNodeWeight(Number nodeId, double w);
 	/**
 	 *  
 	 *  获取节点的权重
 	 * @param nodeId
 	 * @return Integer
 	 */
-	public float getNodeWeight(Number nodeId);
+	public double getNodeWeight(Number nodeId);
 	
 	/**
 	 *  
 	 *  获取边的权重
 	 * @param preNode
 	 * @param postNode
-	 * @return float
+	 * @return double
 	 */
-	public float getEdgeWeight(Node preNode, Node postNode);
+	public double getEdgeWeight(Node preNode, Node postNode);
 	
 	/**
 	 *  
 	 *  获取边的权重
 	 * @param preNodeId
 	 * @param postNodeId
-	 * @return float
+	 * @return double
 	 */
-	public float getEdgeWeight(Number preNodeId, Number postNodeId);
+	public double getEdgeWeight(Number preNodeId, Number postNodeId);
 	/*
 	 * @getNodeIndexByNodeId
 	 *  通过节点的ID获取该节点在拓扑数组中的索引
@@ -232,7 +232,7 @@ public interface InterfaceNet {
 	 * @param nodeWeight
 	 * 
 	 */
-	public void updateNodeWeight(Node node, float nodeWeight);
+	public void updateNodeWeight(Node node, double nodeWeight);
 	/**
 	 *   
 	 *  更新节点的权值
@@ -240,7 +240,7 @@ public interface InterfaceNet {
 	 * @param nodeWeight
 	 * 
 	 */
-	public void updateNodeWeight(Number nodeId, float nodeWeight);
+	public void updateNodeWeight(Number nodeId, double nodeWeight);
 	
 	/**
 	 *   
@@ -250,7 +250,7 @@ public interface InterfaceNet {
 	 * @param edgeWeight
 	 * @return boolean
 	 */
-	public boolean updateEdgeWeight(Node preNode, Node postNode, float edgeWeight);
+	public boolean updateEdgeWeight(Node preNode, Node postNode, double edgeWeight);
 	
 	/**
 	 *   
@@ -260,7 +260,7 @@ public interface InterfaceNet {
 	 * @param edgeWeight
 	 * @return boolean
 	 */
-	public boolean updateEdgeWeight(Number preNodeId, Number postNodeId, float edgeWeight);
+	public boolean updateEdgeWeight(Number preNodeId, Number postNodeId, double edgeWeight);
 	
 	/**
 	 *   
@@ -341,7 +341,7 @@ public interface InterfaceNet {
 	 * @param  edgeWeight
 	 * @return Edge
 	 */
-	public Edge insertEdge(final Number preNodeId, final Number postNodeId, float edgeWeight);
+	public Edge insertEdge(final Number preNodeId, final Number postNodeId, double edgeWeight);
 	
 	/**
 	 *  
@@ -352,7 +352,7 @@ public interface InterfaceNet {
 	 * @param  postNodeWeight
 	 * @return Edge
 	 */
-	public Edge insertEdge(final Number preNodeId, float preNodeWeight, final Number postNodeId, float postNodeWeight);
+	public Edge insertEdge(final Number preNodeId, double preNodeWeight, final Number postNodeId, double postNodeWeight);
 
 	/**
 	 *  
@@ -364,7 +364,7 @@ public interface InterfaceNet {
 	 * @param  edgeWeight
 	 * @return Edge
 	 */
-	public Edge insertEdge(final Number preNodeId, float preNodeWeight, final Number postNodeId, float postNodeWeight, float edgeWeight);
+	public Edge insertEdge(final Number preNodeId, double preNodeWeight, final Number postNodeId, double postNodeWeight, double edgeWeight);
 
 
 	/**

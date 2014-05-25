@@ -32,9 +32,11 @@ import me.mervin.model.NWNetwork;
 import me.mervin.model.NearestNeighborCoupledNet;
 import me.mervin.model.WSNetwork;
 import me.mervin.module.extract.EdgeDeweigh;
+import me.mervin.module.feature.AssortativityCoefficient;
 import me.mervin.module.feature.ClusterCofficient;
 import me.mervin.module.feature.Coreness;
 import me.mervin.module.feature.Degree;
+import me.mervin.module.feature.DegreeAndCC;
 import me.mervin.module.feature.StructureEntropy;
 import me.mervin.module.graphFormats.GraphML;
 import me.mervin.module.graphFormats.GraphMLReader;
@@ -330,21 +332,25 @@ public class Index {
 		
 		
 		
-		String srcDir = "./data/as/";
+/*		String srcDir = "./data/";
 		FileTool ft = new FileTool();
 		//File[] fileArr = ft.fileArr(srcDir, "20070701");
-		File[] fileArr = ft.fileArr(srcDir);
-		StructureEntropy se = new StructureEntropy();
+//		StructureEntropy se = new StructureEntropy();
+		Degree d = new Degree();
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < fileArr.length; i++) {
-			D.p(fileArr[i].getAbsoluteFile());
-			String name = fileArr[i].getName();
-			String prefix = name.substring(0, name.indexOf("."));
-			Network net = new Network(fileArr[i].getAbsolutePath(), NetType.UNDIRECTED, NumberType.LONG);
-			//false:结构熵，true:标准结构熵
-			sb.append(prefix).append("\t").append(se.script(net, false)).append("\r\n");
+		for(int k = 2009; k <= 2012; k++){
+			File[] fileArr = ft.fileArr(srcDir+k+"/");
+			for (int i = 0; i < fileArr.length; i++) {
+				D.p(fileArr[i].getAbsoluteFile());
+				String name = fileArr[i].getName();
+				String prefix = name.substring(0, name.indexOf("."));
+				Network net = new Network(fileArr[i].getAbsolutePath(), NetType.UNDIRECTED, NumberType.LONG);
+				//false:结构熵，true:标准结构熵
+				sb.append(prefix).append("\t").append(d.netDegreeMax(net)).append("\r\n");
+			}
 		}
-		new FileTool().write(sb, "./data/struct_entropy_vMax-v.txt");
+
+		new FileTool().write(sb, "./data/degree_max.txt");*/
 		
 		
 		
@@ -357,5 +363,74 @@ public class Index {
 		D.p(d.netDegreeAvg());
 		D.p(net.edgeNum);
 		new FileTool().write(net.traverseEdge(), "./data/t3.txt");*/
+		
+		
+/*		Set<Pair<Integer>> set = new HashSet<Pair<Integer>>();
+		Pair<Integer> p = new Pair<Integer>(1,2);
+		set.add(p);
+		D.p(set);
+		p = new Pair<Integer>(1,3);
+		set.add(p);
+		D.p(set);
+		p = new Pair<Integer>(1,2);
+		set.add(p);
+		D.p(set);*/
+		
+/*		for(int i = 0; i < 50; i++){
+			D.p(Math.random());
+		}*/
+/*		Map<Number, Number> m = new HashMap<Number, Number>();
+		m.put(1, 1);
+		m.put(2, 1);
+		D.p(m.values());*/
+/*		Set<Number> s1 = new HashSet<Number>();
+		Set<Number> s2 = new HashSet<Number>();
+		s2.add(1);
+		s2.add(2);
+		s2.add(3);
+		s2.add(4);
+		D.p(s1.addAll(s2));
+		D.p(s1);
+		s2.remove(1);
+		D.p(s2);
+		D.p(s1);
+		s2.clear();
+		D.p(s2);*/
+		
+	/*	String prefix = "1000-0.5-0.45";
+		String srcFile = "./data/hpa-"+prefix+".txt";
+		String dstDir = "./data/hpa/";
+		String dstFile = null;
+		FileTool ft = new FileTool();
+		Network net = new Network(srcFile, NetType.UNDIRECTED, NumberType.INTEGER);
+		Degree d = new Degree();
+		dstFile = dstDir+"degree-"+prefix+".txt";
+		ft.write(d.netDegreeDistributionRatio(net), dstFile);
+//		D.p(d.netDegreeMax());
+		Coreness core = new Coreness();
+		dstFile = dstDir+"core-"+prefix+".txt";
+		ft.write(core.nodeCore(net, net.getAllNodeId()), dstFile);
+		DegreeAndCC dc = new DegreeAndCC();
+		dstFile = dstDir+"dcc-"+prefix+".txt";
+		ft.write(dc.script(net), dstFile);
+		AssortativityCoefficient ac = new AssortativityCoefficient();
+		dstFile = dstDir+"ac-"+prefix+".txt";
+		ft.write(ac.script(net)+"", dstFile);
+		StructureEntropy se = new StructureEntropy();
+		dstFile = dstDir+"se-"+prefix+".txt";
+		ft.write(se.script(net)+"", dstFile);*/
+		
+		Network net = new Network("./data/neuBee.txt", NetType.DIRECTED, NumberType.INTEGER);
+		Degree d = new Degree();
+		FileTool ft = new FileTool();
+		String dstFile = null;
+		dstFile = "./data/neu-bee-in.txt";
+//		ft.write(d.netInDegreeDistributionRatio(net), dstFile);
+		dstFile = "./data/neu-bee-out.txt";
+//		ft.write(d.netOutDegreeDistributionRatio(net), dstFile);
+		
+		net = new Network("./data/neuBee.txt", NetType.UNDIRECTED, NumberType.INTEGER);
+		dstFile = "./data/neu-bee.txt";
+		ft.write(d.netDegreeDistributionRatio(net), dstFile);
 	}
 }
