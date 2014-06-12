@@ -659,6 +659,7 @@ public class HPA extends  NetModel {
 //								visited.add(adjNodeId);
 //							}
 						}
+
 					}//for
 				}//if
 			}
