@@ -33,6 +33,7 @@ import me.mervin.core.Network;
 import me.mervin.util.D;
 import me.mervin.util.MapTool;
 import me.mervin.util.MathTool;
+import me.mervin.util.PairList;
 
 /**
  * Degree.java
@@ -611,6 +612,25 @@ public class Degree{
 	public Map<Number, Number> netOutDegreeDistributionRatio(Network net){
 		return MathTool.ratio(this.netOutDegreeDistribution(net));
 	}
+	
+	/**
+	 * 累积度分布
+	 * @param net 网络
+	 * @return PairList<Number, Number>
+	 */
+	public PairList<Number, Number> ccdf(Network net){
+		Map<Number, Number> degreeDistRatio = this.netDegreeDistributionRatio(net);
+		MapTool mt = new MapTool();
+		PairList<Number, Number> cumulateDegreeDistRatio = mt.sort(degreeDistRatio, true, true);
+		PairList<Number, Number> cumulateDegreeDistRatio2 = new PairList<Number, Number>();
+		cumulateDegreeDistRatio2.add(cumulateDegreeDistRatio.getL(0), cumulateDegreeDistRatio.getR(0).doubleValue());
+		for(int i = 1; i < cumulateDegreeDistRatio.size(); i++){
+			cumulateDegreeDistRatio2.add(cumulateDegreeDistRatio.getL(i), cumulateDegreeDistRatio.getR(i).doubleValue()+cumulateDegreeDistRatio2.getR(i-1).doubleValue());
+		}
+		return cumulateDegreeDistRatio2;
+	}
+	
+	
 	/**
 	 *  netDegreeAvg
 	 *  网络度的平均值

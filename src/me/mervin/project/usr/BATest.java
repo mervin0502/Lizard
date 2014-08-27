@@ -19,11 +19,11 @@ public class BATest {
 
 	public static void main(String[] args){
 		FileTool ft = new FileTool();
-		BANetwork ba = new BANetwork(3, NetType.UNDIRECTED);
-		ba.set(2000, 2);
+		BANetwork ba = new BANetwork(5, NetType.UNDIRECTED);
+		ba.set(1000, 3);
 		ba.createModelNetwork();
 		PairList<Number,Number> edge = ba.traverseEdge();
-		String dstFile = "";
+		String dstFile = "./data/ba.txt";
 		ft.write(edge, dstFile);
 	}
 }

@@ -39,6 +39,9 @@ import me.mervin.core.Global.NumberType;
  *  + public static union(Set<Number> preSet, Set<Number> postSet)
  */
 public class MathTool {
+	
+/*	public static enum Item{};
+	public static enum Sort{};*/
 	public static int seed = 3;
 	/**
 	 *  str2Number
