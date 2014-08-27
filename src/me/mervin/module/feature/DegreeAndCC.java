@@ -60,7 +60,7 @@ public class DegreeAndCC {
 		 */
 		for(Number nodeId:ccMap.keySet()){
 			degree = degreeMap.get(nodeId);
-			if(v.containsKey(nodeId)){
+			if(v.containsKey(degree)){
 				k = v.get(nodeId).doubleValue()+ccMap.get(nodeId).doubleValue();
 			}else{
 				k = ccMap.get(nodeId).doubleValue();

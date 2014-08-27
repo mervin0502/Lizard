@@ -429,8 +429,8 @@ public class Index {
 		dstFile = "./data/neu-bee-out.txt";
 //		ft.write(d.netOutDegreeDistributionRatio(net), dstFile);
 		
-		net = new Network("./data/neuBee.txt", NetType.UNDIRECTED, NumberType.INTEGER);
-		dstFile = "./data/neu-bee.txt";
+		net = new Network("./data/USpowerGrid.txt", NetType.UNDIRECTED, NumberType.INTEGER);
+		dstFile = "./data/USpowerGrid-ddr.txt";
 		ft.write(d.netDegreeDistributionRatio(net), dstFile);
 	}
 }
