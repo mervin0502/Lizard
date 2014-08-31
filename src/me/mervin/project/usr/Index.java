@@ -420,20 +420,17 @@ public class Index {
 		dstFile = dstDir+"se-"+prefix+".txt";
 		ft.write(se.script(net)+"", dstFile);*/
 		
-		Network net = new Network("./data/aaa.txt", NetType.UNDIRECTED, NumberType.INTEGER);
+		Network net = new Network("./data/neuBee.txt", NetType.DIRECTED, NumberType.INTEGER);
 		Degree d = new Degree();
 		FileTool ft = new FileTool();
 		String dstFile = null;
-		dstFile = "./data/kc.txt";
-		ft.write(d.ccdf(net), dstFile);
-		D.p(d.ccdf(net));
-		D.p(d.ccdf(net));
-/*//		ft.write(d.netInDegreeDistributionRatio(net), dstFile);
+		dstFile = "./data/neu-bee-in.txt";
+//		ft.write(d.netInDegreeDistributionRatio(net), dstFile);
 		dstFile = "./data/neu-bee-out.txt";
 //		ft.write(d.netOutDegreeDistributionRatio(net), dstFile);
 		
 		net = new Network("./data/USpowerGrid.txt", NetType.UNDIRECTED, NumberType.INTEGER);
 		dstFile = "./data/USpowerGrid-ddr.txt";
-		ft.write(d.netDegreeDistributionRatio(net), dstFile);*/
+		ft.write(d.netDegreeDistributionRatio(net), dstFile);
 	}
 }
