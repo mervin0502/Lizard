@@ -23,6 +23,7 @@ public class LNNet {
 		
 		
 		new ExtractIPv4ByLink("./data/02.txt", "./data/res02.txt").script();
+		
 		new EdgeDeweigh("./data/res02.txt","./data/res02-reduce.txt", NumberType.LONG).script();
 		
 		String srcFile = "./data/res02-reduce.txt";
