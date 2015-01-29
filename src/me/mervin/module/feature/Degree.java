@@ -630,7 +630,13 @@ public class Degree{
 		return cumulateDegreeDistRatio2;
 	}
 	
-	
+	/**
+	 * 累积度分布
+	 * @return PairList<Number, Number>
+	 */
+	public PairList<Number, Number> ccdf(){
+		return this.ccdf(this.net);
+	}
 	/**
 	 *  netDegreeAvg
 	 *  网络度的平均值

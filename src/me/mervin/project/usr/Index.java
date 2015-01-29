@@ -408,7 +408,7 @@ public class Index {
 		ft.write(d.netDegreeDistributionRatio(net), dstFile);
 //		D.p(d.netDegreeMax());
 		Coreness core = new Coreness();
-		dstFile = dstDir+"core-"+prefix+".txt";
+		dstFile = dstDir+"core-"+prefix+".txt"; 
 		ft.write(core.nodeCore(net, net.getAllNodeId()), dstFile);
 		DegreeAndCC dc = new DegreeAndCC();
 		dstFile = dstDir+"dcc-"+prefix+".txt";
